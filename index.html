@@ -347,7 +347,12 @@ textarea{resize:vertical;min-height:70px}
       <div class="sb-item" onclick="nav('processos',this)">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         Processos
-        <span class="sb-badge" id="badge-proc">4</span>
+        <span class="sb-badge" id="badge-proc">0</span>
+      </div>
+      <div class="sb-item" onclick="nav('financeiro',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Financeiro
+        <span class="sb-badge red" id="badge-fin">0</span>
       </div>
       <div class="sb-item" onclick="nav('agenda',this)">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -722,7 +727,84 @@ _Advoca.ai · Gestão Jurídica Automatizada_</p>
         </div>
       </div>
 
+      <!-- FINANCEIRO -->
+      <div class="page" id="page-financeiro">
+        <!-- Métricas financeiras -->
+        <div class="metrics" style="margin-bottom:16px">
+          <div class="metric green"><div class="metric-label">Total recebido</div><div class="metric-val" id="fin-recebido">R$ 0</div><div class="metric-sub">este mês</div></div>
+          <div class="metric blue"><div class="metric-label">A receber</div><div class="metric-val" id="fin-areceber">R$ 0</div><div class="metric-sub">em aberto</div></div>
+          <div class="metric red"><div class="metric-label">Em atraso</div><div class="metric-val" id="fin-atraso" style="color:var(--rtxt)">R$ 0</div><div class="metric-sub">vencidos</div></div>
+          <div class="metric gold"><div class="metric-label">Total geral</div><div class="metric-val" id="fin-total">R$ 0</div><div class="metric-sub">todos os contratos</div></div>
+        </div>
+
+        <div class="search-bar">
+          <div class="search-input-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Buscar por cliente ou processo..." oninput="filtrarFinanceiro(this.value)">
+          </div>
+          <select id="fin-filtro" onchange="filtrarFinanceiro(document.querySelector('#page-financeiro input').value)" style="border:1px solid var(--border2);background:var(--card);color:var(--txt);padding:8px 12px;border-radius:var(--r);font-size:13px;font-family:'Inter',sans-serif">
+            <option value="">Todos os status</option>
+            <option value="Pago">Pagos</option>
+            <option value="Pendente">Pendentes</option>
+            <option value="Atrasado">Atrasados</option>
+            <option value="Parcelado">Parcelados</option>
+          </select>
+          <button class="btn btn-primary" onclick="abrirModal('modal-pagamento')">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo lançamento
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Cliente</th><th>Processo</th><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Forma</th><th>Parcelas</th><th>Status</th><th></th></tr></thead>
+            <tbody id="tb-financeiro"></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
+  </div>
+</div>
+
+<!-- MODAL PAGAMENTO -->
+<div class="modal-overlay" id="modal-pagamento">
+  <div class="modal">
+    <div class="modal-head"><h3>Novo lançamento financeiro</h3><button class="btn btn-sm" onclick="fecharModal('modal-pagamento')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Cliente *</label><select id="pg-cli"><option value="">— Selecionar —</option></select></div>
+        <div class="form-group"><label class="form-label">Processo (opcional)</label><select id="pg-proc"><option value="">— Selecionar —</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Descrição *</label><input type="text" id="pg-desc" placeholder="Ex: Honorários — Ação Previdenciária"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Valor total (R$) *</label><input type="number" id="pg-valor" placeholder="0,00" min="0" step="0.01"></div>
+        <div class="form-group"><label class="form-label">Forma de pagamento</label>
+          <select id="pg-forma"><option>Pix</option><option>Boleto</option><option>Cartão</option><option>Dinheiro</option><option>Transferência</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Parcelado em</label>
+          <select id="pg-parcelas" onchange="atualizarParcelas()">
+            <option value="1">À vista</option>
+            <option value="2">2x</option>
+            <option value="3">3x</option>
+            <option value="4">4x</option>
+            <option value="5">5x</option>
+            <option value="6">6x</option>
+            <option value="10">10x</option>
+            <option value="12">12x</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Data de vencimento *</label><input type="date" id="pg-venc"></div>
+      </div>
+      <div id="pg-parcelas-preview" style="display:none;background:var(--bg);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--txt2);margin-top:-8px;margin-bottom:4px"></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select id="pg-status"><option>Pendente</option><option>Pago</option><option>Atrasado</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Observação</label><textarea id="pg-obs" placeholder="Informações adicionais..."></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="fecharModal('modal-pagamento')">Cancelar</button><button class="btn btn-primary" onclick="salvarPagamento()">Salvar lançamento</button></div>
   </div>
 </div>
 
@@ -921,7 +1003,125 @@ let prazos=[];
 
 let processos=[];
 
+let pagamentos=[];
+
 let notificacoes=[];
+
+function fmtMoeda(v){return'R$ '+parseFloat(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+function renderFinanceiro(filter=''){
+  const tb=document.getElementById('tb-financeiro');
+  if(!tb)return;
+  const filtroStatus=document.getElementById('fin-filtro')?.value||'';
+  let list=[...pagamentos];
+  list.forEach(p=>{if(p.status==='Pendente'&&p.vencimento&&diasAte(p.vencimento)<0)p.status='Atrasado';});
+  if(filter)list=list.filter(p=>p.cliente.toLowerCase().includes(filter.toLowerCase())||p.desc.toLowerCase().includes(filter.toLowerCase()));
+  if(filtroStatus)list=list.filter(p=>p.status===filtroStatus);
+  const statusColor={Pago:'badge-green',Pendente:'badge-blue',Atrasado:'badge-red',Parcelado:'badge-amber'};
+  const formaIcon={Pix:'💠',Boleto:'📄',Cartão:'💳',Dinheiro:'💵',Transferência:'🏦'};
+  tb.innerHTML=list.length===0?`<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--txt3);font-size:13px">Nenhum lançamento encontrado. Clique em "Novo lançamento" para começar.</td></tr>`:list.map(p=>`<tr>
+    <td style="font-weight:500">${p.cliente}</td>
+    <td style="font-size:12px;color:var(--btxt)">${p.processo?p.processo.slice(0,18)+'...':'—'}</td>
+    <td>${p.desc}</td>
+    <td style="font-weight:600">${fmtMoeda(p.valor)}</td>
+    <td>${fmtData(p.vencimento)}</td>
+    <td>${formaIcon[p.forma]||''} ${p.forma}</td>
+    <td style="text-align:center">${p.parcelas>1?`${p.parcelaAtual}/${p.parcelas}`:'À vista'}</td>
+    <td><span class="badge ${statusColor[p.status]||'badge-gray'}">${p.status}</span></td>
+    <td><div class="td-actions">
+      ${p.status!=='Pago'?`<button class="btn btn-sm btn-green" onclick="marcarPago(${p.id})" title="Marcar como pago">✓</button>`:''}
+      <button class="btn btn-sm btn-red" onclick="delPagamento(${p.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+    </div></td>
+  </tr>`).join('');
+  const recebido=pagamentos.filter(p=>p.status==='Pago').reduce((s,p)=>s+parseFloat(p.valor),0);
+  const areceber=pagamentos.filter(p=>['Pendente','Parcelado'].includes(p.status)).reduce((s,p)=>s+parseFloat(p.valor),0);
+  const atraso=pagamentos.filter(p=>p.status==='Atrasado').reduce((s,p)=>s+parseFloat(p.valor),0);
+  const total=pagamentos.reduce((s,p)=>s+parseFloat(p.valor),0);
+  const setEl=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+  setEl('fin-recebido',fmtMoeda(recebido));
+  setEl('fin-areceber',fmtMoeda(areceber));
+  setEl('fin-atraso',fmtMoeda(atraso));
+  setEl('fin-total',fmtMoeda(total));
+  const atrasados=pagamentos.filter(p=>p.status==='Atrasado').length;
+  const badge=document.getElementById('badge-fin');
+  if(badge){badge.textContent=atrasados;badge.style.display=atrasados>0?'':'none';}
+}
+
+function atualizarSelectsPagamento(){
+  const sc=document.getElementById('pg-cli');
+  const sp=document.getElementById('pg-proc');
+  if(sc)sc.innerHTML='<option value="">— Selecionar —</option>'+clientes.map(c=>`<option value="${c.nome}">${c.nome}</option>`).join('');
+  if(sp)sp.innerHTML='<option value="">— Selecionar —</option>'+processos.map(p=>`<option value="${p.num}">${p.num.slice(0,30)}</option>`).join('');
+}
+
+function atualizarParcelas(){
+  const n=parseInt(document.getElementById('pg-parcelas').value);
+  const v=parseFloat(document.getElementById('pg-valor').value)||0;
+  const prev=document.getElementById('pg-parcelas-preview');
+  if(!prev)return;
+  if(n>1&&v>0){prev.style.display='block';prev.textContent=`${n}x de ${fmtMoeda(v/n)} = ${fmtMoeda(v)}`;}
+  else prev.style.display='none';
+}
+
+function salvarPagamento(){
+  const cli=document.getElementById('pg-cli').value;
+  const desc=document.getElementById('pg-desc').value.trim();
+  const valor=document.getElementById('pg-valor').value;
+  const venc=document.getElementById('pg-venc').value;
+  if(!cli||!desc||!valor||!venc){toast('danger','Erro','Preencha cliente, descrição, valor e vencimento');return}
+  const parcelas=parseInt(document.getElementById('pg-parcelas').value);
+  const status=document.getElementById('pg-status').value;
+  const forma=document.getElementById('pg-forma').value;
+  const proc=document.getElementById('pg-proc').value||'';
+  const obs=document.getElementById('pg-obs').value;
+  if(parcelas>1){
+    const vp=(parseFloat(valor)/parcelas).toFixed(2);
+    const dataBase=new Date(venc+'T12:00:00');
+    for(let i=0;i<parcelas;i++){
+      const dataParc=new Date(dataBase);
+      dataParc.setMonth(dataParc.getMonth()+i);
+      pagamentos.push({id:Date.now()+i,cliente:cli,processo:proc,desc:`${desc} (${i+1}/${parcelas})`,valor:parseFloat(vp),vencimento:dataParc.toISOString().split('T')[0],forma,parcelas,parcelaAtual:i+1,status:i===0?status:'Pendente',obs});
+    }
+    toast('success','Parcelamento criado!',`${parcelas}x de ${fmtMoeda(parseFloat(valor)/parcelas)}`);
+  } else {
+    pagamentos.push({id:Date.now(),cliente:cli,processo:proc,desc,valor:parseFloat(valor),vencimento:venc,forma,parcelas:1,parcelaAtual:1,status,obs});
+    toast('success','Lançamento salvo!',`${fmtMoeda(parseFloat(valor))} — ${cli}`);
+  }
+  renderFinanceiro();verificarInadimplencia();fecharModal('modal-pagamento');
+  ['pg-desc','pg-valor','pg-venc','pg-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+}
+
+function marcarPago(id){
+  const p=pagamentos.find(x=>x.id===id);if(!p)return;
+  p.status='Pago';renderFinanceiro();
+  toast('success','Pagamento confirmado!',`${fmtMoeda(p.valor)} — ${p.cliente}`);
+}
+
+function delPagamento(id){
+  if(!confirm('Remover este lançamento?'))return;
+  pagamentos=pagamentos.filter(p=>p.id!==id);renderFinanceiro();
+}
+
+function filtrarFinanceiro(v){renderFinanceiro(v)}
+
+function verificarInadimplencia(){
+  const atrasados=pagamentos.filter(p=>{
+    if(p.status==='Pago')return false;
+    return p.vencimento&&diasAte(p.vencimento)<0;
+  });
+  atrasados.forEach(p=>{
+    if(p.status==='Atrasado')return;
+    p.status='Atrasado';
+    toast('danger','Pagamento em atraso!',`${p.cliente} — ${fmtMoeda(p.valor)} venceu em ${fmtData(p.vencimento)}`,8000);
+    notificacoes.unshift({tipo:'danger',txt:`<strong>Inadimplência:</strong> ${p.cliente} — ${fmtMoeda(p.valor)} em atraso`,time:'Agora'});
+    const advWa=zapiConfig?.numero||'';
+    if(advWa&&zapiConfig?.instance&&zapiConfig?.token){
+      const msg=`⚖️ *Advoca.ai — Alerta de Inadimplência*\n\n🔴 *Pagamento em atraso!*\n\n👤 Cliente: *${p.cliente}*\n📋 Ref: ${p.desc}\n💰 Valor: *${fmtMoeda(p.valor)}*\n📅 Vencimento: *${fmtData(p.vencimento)}*\n\n_Advoca.ai · Gestão Jurídica_`;
+      enviarWhatsApp(advWa,msg);
+    }
+  });
+  if(atrasados.length>0){renderFinanceiro();renderDashNotif();}
+}
 
 // TOAST
 function toast(tipo, titulo, msg, duracao=5000){
@@ -1107,6 +1307,7 @@ function atualizarSelects(){
     if(!s)return;
     s.innerHTML='<option value="">— Selecionar cliente —</option>'+clientes.map(c=>`<option value="${c.nome}">${c.nome}</option>`).join('');
   });
+  atualizarSelectsPagamento();
 }
 
 function salvarCliente(){
@@ -1497,15 +1698,17 @@ function nav(page,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const pg=document.getElementById('page-'+page);
   if(pg)pg.classList.add('active');
-  const titles={dashboard:'Dashboard',prazos:'Prazos processuais',clientes:'Clientes',processos:'Processos',agenda:'Agenda',alertas:'Alertas & Notificações',oab:'Buscar por OAB'};
+  const titles={dashboard:'Dashboard',prazos:'Prazos processuais',clientes:'Clientes',processos:'Processos',financeiro:'Financeiro',agenda:'Agenda',alertas:'Alertas & Notificações',oab:'Buscar por OAB'};
   const t=document.getElementById('page-title');
   if(t)t.textContent=titles[page]||page;
 }
 
 function iniciarApp(){
-  renderClientes();renderPrazos();renderProcessos();renderAgenda();renderDashPrazos();renderDashNotif();atualizarSelects();
+  renderClientes();renderPrazos();renderProcessos();renderAgenda();renderDashPrazos();renderDashNotif();renderFinanceiro();atualizarSelects();atualizarSelectsPagamento();
   setTimeout(verificarAlertas,3000);
+  setTimeout(verificarInadimplencia,4000);
   setInterval(verificarAlertas,6*60*60*1000);
+  setInterval(verificarInadimplencia,60*60*1000);
 }
 
 // Arranque — só verifica auto-login, NÃO renderiza nada ainda
