@@ -11,34 +11,41 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') { res.writeHead(200); res.end(); return; }
 
   const url = new URL(req.url, `http://${req.headers.host}`);
-  const oab = url.searchParams.get('oab');
-  const uf  = url.searchParams.get('uf');
+  const oab  = url.searchParams.get('oab');
+  const uf   = url.searchParams.get('uf');
+  const nome = url.searchParams.get('nome'); // busca por nome do advogado
 
   // Health check
-  if (!oab || !uf) {
+  if (!oab && !nome) {
     res.writeHead(200, {'Content-Type':'application/json'});
-    res.end(JSON.stringify({status:'ok', message:'Advoca.ai API funcionando! Use ?oab=NUMERO&uf=UF'}));
+    res.end(JSON.stringify({status:'ok', message:'Advoca.ai API funcionando!'}));
     return;
   }
 
   const tribunais = [
     {alias:'api_publica_tjba', nome:'TJBA'},
     {alias:'api_publica_trf1', nome:'TRF1'},
-    {alias:'api_publica_tst',  nome:'TST'},
+    {alias:'api_publica_trt5', nome:'TRT5'},
   ];
 
   const processosTodos = [];
 
   const buscas = tribunais.map(trib => new Promise(resolve => {
+
+    // Monta query — tenta OAB e nome
+    const should = [];
+    if(oab && uf){
+      should.push({match: {'dadosBasicos.polo.representante.numeroOAB': `${uf}${oab}`}});
+      should.push({match: {'dadosBasicos.polo.representante.numeroOAB': oab}});
+      should.push({match_phrase: {'dadosBasicos.polo.representante.nome': nome || ''}});
+    }
+    if(nome){
+      should.push({match: {'dadosBasicos.polo.representante.nome': nome}});
+      should.push({match: {'dadosBasicos.polo.advogado.nome': nome}});
+    }
+
     const body = JSON.stringify({
-      query: {
-        bool: {
-          should: [
-            {match: {'dadosBasicos.polo.representante.numeroOAB': `${uf}${oab}`}},
-            {match: {'dadosBasicos.polo.representante.numeroOAB': oab}},
-          ]
-        }
-      },
+      query: { bool: { should, minimum_should_match: 1 } },
       size: 50,
       _source: ['numeroProcesso','dadosBasicos','movimentos']
     });
@@ -65,13 +72,16 @@ const server = http.createServer(async (req, res) => {
             const src = h._source || {};
             const movimentos = src.movimentos || [];
             const ultimoMov = movimentos[movimentos.length - 1];
-            processosTodos.push({
-              numero_cnj: src.numeroProcesso || h._id,
-              tribunal: trib.nome + (src.dadosBasicos?.orgaoJulgador?.nomeOrgao ? ' — ' + src.dadosBasicos.orgaoJulgador.nomeOrgao : ''),
-              tipo: src.dadosBasicos?.classeProcessual || 'Não informado',
-              area: src.dadosBasicos?.assunto?.[0]?.descricao || 'Não informado',
-              ultimo_movimento: ultimoMov?.nome || 'Sem movimentação',
-            });
+            const num = src.numeroProcesso || h._id;
+            if(num && !processosTodos.find(p => p.numero_cnj === num)){
+              processosTodos.push({
+                numero_cnj: num,
+                tribunal: trib.nome + (src.dadosBasicos?.orgaoJulgador?.nomeOrgao ? ' — ' + src.dadosBasicos.orgaoJulgador.nomeOrgao : ''),
+                tipo: src.dadosBasicos?.classeProcessual || 'Não informado',
+                area: src.dadosBasicos?.assunto?.[0]?.descricao || 'Não informado',
+                ultimo_movimento: ultimoMov?.nome || 'Sem movimentação',
+              });
+            }
           });
         } catch(e) { console.error('Parse erro:', e.message); }
         resolve();
