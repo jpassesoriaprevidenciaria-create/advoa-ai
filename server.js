@@ -14,9 +14,10 @@ const server = http.createServer(async (req, res) => {
   const oab = url.searchParams.get('oab');
   const uf  = url.searchParams.get('uf');
 
+  // Health check
   if (!oab || !uf) {
-    res.writeHead(400, {'Content-Type':'application/json'});
-    res.end(JSON.stringify({erro:'Informe oab e uf'}));
+    res.writeHead(200, {'Content-Type':'application/json'});
+    res.end(JSON.stringify({status:'ok', message:'Advoca.ai API funcionando! Use ?oab=NUMERO&uf=UF'}));
     return;
   }
 
@@ -39,7 +40,7 @@ const server = http.createServer(async (req, res) => {
         }
       },
       size: 50,
-      _source: ['numeroProcesso','dadosBasicos.assunto','dadosBasicos.orgaoJulgador.nomeOrgao','dadosBasicos.classeProcessual','movimentos']
+      _source: ['numeroProcesso','dadosBasicos','movimentos']
     });
 
     const options = {
@@ -72,12 +73,12 @@ const server = http.createServer(async (req, res) => {
               ultimo_movimento: ultimoMov?.nome || 'Sem movimentação',
             });
           });
-        } catch(e) {}
+        } catch(e) { console.error('Parse erro:', e.message); }
         resolve();
       });
     });
 
-    reqCNJ.on('error', () => resolve());
+    reqCNJ.on('error', (e) => { console.error(`Erro ${trib.nome}:`, e.message); resolve(); });
     reqCNJ.write(body);
     reqCNJ.end();
   }));
