@@ -1361,23 +1361,12 @@ async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
     toast('info','Sincronizando...','Buscando processos no Escavador. Aguarde.',4000);
   }
   try{
-    // Usa proxy CORS para contornar restrição de browser
-    const proxy = 'https://corsproxy.io/?';
-
-    // Busca processos pelo número OAB diretamente
-    const url = `${proxy}${encodeURIComponent(`https://api.escavador.com/api/v1/processos/numero-oab?numero=${oabNumero}&uf=${oabUF}&limit=50`)}`;
-    const resp = await fetch(url,{
-      headers:{
-        'Authorization':'Bearer '+ESCAVADOR_TOKEN,
-        'Accept':'application/json',
-        'X-Requested-With':'XMLHttpRequest'
-      }
-    });
+    // Chama a função serverless da Vercel (sem CORS)
+    const resp = await fetch(`/api/sync?oab=${oabNumero}&uf=${oabUF}`);
 
     if(!resp.ok){
-      const errText = await resp.text();
-      console.error('Escavador resposta:', resp.status, errText);
-      throw new Error(`Erro ${resp.status} — verifique o plano Escavador`);
+      const err = await resp.json().catch(()=>({}));
+      throw new Error(err.erro || `Erro ${resp.status}`);
     }
 
     const dados = await resp.json();
@@ -1405,10 +1394,10 @@ async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
     document.getElementById('sync-status').innerHTML='<div class="sync-dot ok"></div><span>Sincronizado agora</span>';
     if(exibirFeedback){
       if(importados>0){
-        toast('success',`${importados} processos importados!`,`Processos sincronizados do Escavador com sucesso.`,6000);
-        notificacoes.unshift({tipo:'success',txt:`<strong>Escavador:</strong> ${importados} processos sincronizados via OAB/${oabUF} ${oabNumero}`,time:'Agora'});
+        toast('success',`${importados} processos importados!`,`Processos sincronizados com sucesso.`,6000);
+        notificacoes.unshift({tipo:'success',txt:`<strong>Escavador:</strong> ${importados} processos via OAB/${oabUF} ${oabNumero}`,time:'Agora'});
       } else if(lista.length===0){
-        toast('info','Nenhum processo encontrado',`Nenhum processo localizado para OAB/${oabUF} ${oabNumero} no Escavador.`,5000);
+        toast('info','Nenhum processo encontrado',`Nenhum processo localizado para OAB/${oabUF} ${oabNumero}.`,5000);
       } else {
         toast('info','Tudo atualizado','Todos os processos já estavam cadastrados.',4000);
       }
@@ -1416,9 +1405,9 @@ async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
     }
     return importados;
   } catch(e){
-    console.error('Escavador erro:',e);
+    console.error('Erro sincronização:',e);
     document.getElementById('sync-status').innerHTML='<div class="sync-dot pending"></div><span>Erro na sincronização</span>';
-    if(exibirFeedback) toast('danger','Erro na sincronização',`${e.message}`,6000);
+    if(exibirFeedback) toast('danger','Erro na sincronização',e.message,6000);
     return 0;
   }
 }
