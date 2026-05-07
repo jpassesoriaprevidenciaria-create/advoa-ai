@@ -401,10 +401,10 @@ textarea{resize:vertical;min-height:70px}
       <!-- DASHBOARD -->
       <div class="page active" id="page-dashboard">
         <div class="metrics">
-          <div class="metric blue"><div class="metric-label">Processos ativos</div><div class="metric-val" id="m-proc">4</div><div class="metric-sub">sincronizados</div></div>
-          <div class="metric green"><div class="metric-label">Clientes</div><div class="metric-val" id="m-cli">4</div><div class="metric-sub">cadastrados</div></div>
-          <div class="metric red"><div class="metric-label">Prazos urgentes</div><div class="metric-val" id="m-urg" style="color:var(--rtxt)">2</div><div class="metric-sub">próximos 7 dias</div></div>
-          <div class="metric gold"><div class="metric-label">Audiências</div><div class="metric-val">2</div><div class="metric-sub">esta semana</div></div>
+          <div class="metric blue"><div class="metric-label">Processos ativos</div><div class="metric-val" id="m-proc">0</div><div class="metric-sub">sincronizados</div></div>
+          <div class="metric green"><div class="metric-label">Clientes</div><div class="metric-val" id="m-cli">0</div><div class="metric-sub">cadastrados</div></div>
+          <div class="metric red"><div class="metric-label">Prazos urgentes</div><div class="metric-val" id="m-urg" style="color:var(--rtxt)">0</div><div class="metric-sub">próximos 7 dias</div></div>
+          <div class="metric gold"><div class="metric-label">Audiências</div><div class="metric-val">0</div><div class="metric-sub">esta semana</div></div>
         </div>
         <div class="two-col">
           <div class="card">
@@ -751,9 +751,7 @@ _Advoca.ai · Gestão Jurídica Automatizada_</p>
 <script>
 // ── AUTENTICAÇÃO ───────────────────────────────────────
 let usuarios=[
-  {usuario:'joao.silva',  senha:'1234',     nome:'Dr. João Silva',    oab:'OAB/BA 45.892'},
-  {usuario:'ana.meirelles',senha:'5678',    nome:'Dra. Ana Meirelles',oab:'OAB/SP 112.879'},
-  {usuario:'admin',       senha:'admin123', nome:'Administrador',     oab:'Sistema'},
+  {usuario:'Ana Passos', senha:'Anaflavia-135', nome:'Dra. Ana Flávia Soares Passos', oab:'OAB/BA 75.235'},
 ];
 let usuarioLogado=null;
 
@@ -862,39 +860,13 @@ function diasAte(ds){const d=new Date(ds);d.setHours(0,0,0,0);return Math.round(
 function fmtData(ds){if(!ds)return'—';const[y,m,d]=ds.split('-');return`${d}/${m}/${y}`}
 function fmtDataHoje(){return hoje.toLocaleDateString('pt-BR')}
 
-function iniciarApp(){
-  renderClientes();renderPrazos();renderProcessos();renderAgenda();renderDashPrazos();renderDashNotif();atualizarSelects();
-  setTimeout(verificarAlertas,3000);
-  setInterval(verificarAlertas,6*60*60*1000);
-}
+let clientes=[];
 
-let clientes=[
-  {id:1,nome:'Carlos Alberto Ferreira',cpf:'123.456.789-00',tel:'(71) 98888-1234',wa:'(71) 98888-1234',email:'carlos@email.com',area:'Direito Civil',processos:2,obs:''},
-  {id:2,nome:'Maria das Graças Souza',cpf:'987.654.321-00',tel:'(71) 99999-5678',wa:'(71) 99999-5678',email:'maria@email.com',area:'Direito Trabalhista',processos:1,obs:''},
-  {id:3,nome:'Empresa ABC Ltda',cpf:'12.345.678/0001-90',tel:'(71) 3333-4444',wa:'(71) 98765-3210',email:'abc@empresa.com',area:'Direito Empresarial',processos:3,obs:''},
-  {id:4,nome:'José Benedito Lima',cpf:'456.789.123-00',tel:'(71) 97777-2345',wa:'(71) 97777-2345',email:'jose@email.com',area:'Direito Penal',processos:1,obs:''},
-];
+let prazos=[];
 
-let prazos=[
-  {id:1,processo:'0001234-56.2024.8.05.0001',tipo:'Recurso',data:'2025-05-08',cliente:'Carlos Alberto Ferreira',alerta:'1',obs:'Recurso de apelação',alertaEnviado:false},
-  {id:2,processo:'0002345-78.2024.8.05.0002',tipo:'Contestação',data:'2025-05-12',cliente:'Maria das Graças Souza',alerta:'1',obs:'',alertaEnviado:false},
-  {id:3,processo:'0003456-90.2024.8.05.0001',tipo:'Audiência',data:'2025-05-20',cliente:'Empresa ABC Ltda',alerta:'1',obs:'',alertaEnviado:false},
-  {id:4,processo:'0004567-12.2024.8.05.0003',tipo:'Manifestação',data:'2025-05-28',cliente:'José Benedito Lima',alerta:'2',obs:'',alertaEnviado:false},
-];
+let processos=[];
 
-let processos=[
-  {id:1,num:'0001234-56.2024.8.05.0001',cliente:'Carlos Alberto Ferreira',tipo:'Cível',tribunal:'TJBA — 1ª Vara Cível',fase:'Recurso',mov:'Intimação para apresentar razões de recurso',sync:'03/05/2025 14:22'},
-  {id:2,num:'0002345-78.2024.8.05.0002',cliente:'Maria das Graças Souza',tipo:'Trabalhista',tribunal:'TRT 5ª Região',fase:'Instrução',mov:'Designada audiência de instrução',sync:'01/05/2025 09:10'},
-  {id:3,num:'0003456-90.2024.8.05.0001',cliente:'Empresa ABC Ltda',tipo:'Tributário',tribunal:'TRF 1ª Região',fase:'Conhecimento',mov:'Processo distribuído ao relator',sync:'28/04/2025 16:45'},
-  {id:4,num:'0004567-12.2024.8.05.0003',cliente:'José Benedito Lima',tipo:'Criminal',tribunal:'TJBA — 2ª Vara Criminal',fase:'Julgamento',mov:'Pautado para julgamento',sync:'02/05/2025 11:30'},
-];
-
-let notificacoes=[
-  {tipo:'danger',txt:'<strong>Prazo urgente:</strong> Recurso vence em 2 dias — Proc. 0001234-56',time:'Hoje, 07:00',icone:'alarm'},
-  {tipo:'info',txt:'<strong>Movimentação:</strong> Processo 0002345-78 atualizado no TRT',time:'Hoje, 09:14',icone:'refresh'},
-  {tipo:'success',txt:'<strong>Sincronização:</strong> 4 processos sincronizados com sucesso',time:'Hoje, 08:00',icone:'check'},
-  {tipo:'warn',txt:'<strong>Audiência:</strong> Audiência em 5 dias — Vara Cível, Salvador',time:'Ontem',icone:'calendar'},
-];
+let notificacoes=[];
 
 // TOAST
 function toast(tipo, titulo, msg, duracao=5000){
