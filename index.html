@@ -1361,36 +1361,41 @@ async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
     toast('info','Sincronizando...','Buscando processos no Escavador. Aguarde.',4000);
   }
   try{
-    // Busca advogado pelo número OAB
-    const respAdv = await fetch(`https://api.escavador.com/api/v1/advogados/oab/${oabUF}/${oabNumero}`,{
-      headers:{'Authorization':'Bearer '+ESCAVADOR_TOKEN,'Accept':'application/json'}
-    });
-    if(!respAdv.ok) throw new Error('OAB não encontrada');
-    const dadosAdv = await respAdv.json();
-    const advogadoId = dadosAdv?.id || dadosAdv?.data?.id;
-    if(!advogadoId) throw new Error('Advogado não encontrado');
+    // Usa proxy CORS para contornar restrição de browser
+    const proxy = 'https://corsproxy.io/?';
 
-    // Busca processos do advogado
-    const respProc = await fetch(`https://api.escavador.com/api/v1/advogados/${advogadoId}/processos?limit=50`,{
-      headers:{'Authorization':'Bearer '+ESCAVADOR_TOKEN,'Accept':'application/json'}
+    // Busca processos pelo número OAB diretamente
+    const url = `${proxy}${encodeURIComponent(`https://api.escavador.com/api/v1/processos/numero-oab?numero=${oabNumero}&uf=${oabUF}&limit=50`)}`;
+    const resp = await fetch(url,{
+      headers:{
+        'Authorization':'Bearer '+ESCAVADOR_TOKEN,
+        'Accept':'application/json',
+        'X-Requested-With':'XMLHttpRequest'
+      }
     });
-    if(!respProc.ok) throw new Error('Erro ao buscar processos');
-    const dadosProc = await respProc.json();
-    const lista = dadosProc?.items || dadosProc?.data || [];
+
+    if(!resp.ok){
+      const errText = await resp.text();
+      console.error('Escavador resposta:', resp.status, errText);
+      throw new Error(`Erro ${resp.status} — verifique o plano Escavador`);
+    }
+
+    const dados = await resp.json();
+    const lista = dados?.items || dados?.data || dados?.processos || [];
 
     let importados=0;
     lista.forEach(p=>{
-      const num = p.numero_cnj || p.numero || p.processo_numero;
+      const num = p.numero_cnj || p.numero || p.numero_processo;
       if(!num)return;
-      if(processos.find(x=>x.num===num))return; // já existe
+      if(processos.find(x=>x.num===num))return;
       processos.push({
         id:Date.now()+Math.random(),
         num,
         cliente:'— Vincular cliente —',
-        tipo: p.area || p.ramo_direito || 'Não informado',
-        tribunal: p.tribunal?.sigla || p.tribunal_nome || 'Não informado',
-        fase: p.fase || p.ultimo_movimento?.tipo || 'Não informado',
-        mov: p.ultimo_movimento?.descricao || p.ultimo_andamento || 'Importado do Escavador',
+        tipo: p.area || p.ramo_direito || p.classe_judicial || 'Não informado',
+        tribunal: p.tribunal?.sigla || p.tribunal?.nome || p.tribunal_sigla || 'Não informado',
+        fase: p.ultimo_movimento?.tipo || p.fase_atual || 'Em andamento',
+        mov: p.ultimo_movimento?.descricao || p.ultima_movimentacao || 'Importado do Escavador',
         sync: new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})
       });
       importados++;
@@ -1402,8 +1407,10 @@ async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
       if(importados>0){
         toast('success',`${importados} processos importados!`,`Processos sincronizados do Escavador com sucesso.`,6000);
         notificacoes.unshift({tipo:'success',txt:`<strong>Escavador:</strong> ${importados} processos sincronizados via OAB/${oabUF} ${oabNumero}`,time:'Agora'});
+      } else if(lista.length===0){
+        toast('info','Nenhum processo encontrado',`Nenhum processo localizado para OAB/${oabUF} ${oabNumero} no Escavador.`,5000);
       } else {
-        toast('info','Nenhum processo novo','Todos os processos já estão cadastrados ou nenhum foi encontrado.',5000);
+        toast('info','Tudo atualizado','Todos os processos já estavam cadastrados.',4000);
       }
       renderDashNotif();
     }
@@ -1411,7 +1418,7 @@ async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
   } catch(e){
     console.error('Escavador erro:',e);
     document.getElementById('sync-status').innerHTML='<div class="sync-dot pending"></div><span>Erro na sincronização</span>';
-    if(exibirFeedback) toast('danger','Erro na sincronização',`${e.message}. Verifique o número OAB e tente novamente.`,6000);
+    if(exibirFeedback) toast('danger','Erro na sincronização',`${e.message}`,6000);
     return 0;
   }
 }
