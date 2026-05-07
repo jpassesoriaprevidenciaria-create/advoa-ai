@@ -1360,8 +1360,8 @@ async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
     toast('info','Sincronizando...','Buscando processos no Escavador. Aguarde.',4000);
   }
   try{
-    // Chama a função serverless da Vercel (sem CORS)
-    const resp = await fetch(`/api/sync?oab=${oabNumero}&uf=${oabUF}`);
+    // Chama o servidor no Render
+    const resp = await fetch(`https://advoa-ai.onrender.com?oab=${oabNumero}&uf=${oabUF}`);
 
     if(!resp.ok){
       const err = await resp.json().catch(()=>({}));
