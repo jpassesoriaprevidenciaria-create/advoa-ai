@@ -465,6 +465,10 @@ textarea{resize:vertical;min-height:70px}
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" placeholder="Buscar por número do processo ou cliente..." oninput="filtrarProcessos(this.value)">
           </div>
+          <button class="btn btn-green" onclick="sincronizarEscavador()" title="Sincronizar processos pelo Escavador">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+            Sincronizar via Escavador
+          </button>
           <button class="btn btn-primary" onclick="abrirModal('modal-processo')">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Adicionar processo
@@ -860,6 +864,8 @@ function entrarNoSistema(u){
   document.getElementById('sb-user-name').textContent=u.nome;
   document.getElementById('sb-user-oab').textContent=u.oab;
   iniciarApp();
+  // Sincroniza processos automaticamente pelo Escavador
+  setTimeout(()=>sincronizarAoLogin(), 1500);
 }
 
 function fazerLogout(){
@@ -1302,6 +1308,14 @@ async function enviarAlertaManual(id){
   await disparaAlertaCompleto(p,d);
 }
 
+async function sincronizarEscavador(){
+  if(!usuarioLogado){toast('danger','Erro','Faça login primeiro');return}
+  const oab=usuarioLogado.oab?.replace(/\D/g,'');
+  const uf=usuarioLogado.oab?.match(/[A-Z]{2}/)?.[0]||'BA';
+  if(!oab){toast('danger','Erro','OAB não encontrada no perfil do usuário');return}
+  await sincronizarPorOAB(oab, uf, true);
+}
+
 // ── CONSULTA TRIBUNAIS ─────────────────────────────────
 function abrirPJeOAB(){
   const oab=document.getElementById('oab-input').value.trim();
@@ -1337,7 +1351,94 @@ function abrirJusbrasilProcesso(){
   window.open(`https://www.jusbrasil.com.br/processos/busca?q=${encodeURIComponent(num)}`,'_blank');
 }
 
-// ── BUSCA POR OAB ──────────────────────────────────────
+// ── ESCAVADOR API ──────────────────────────────────────
+const ESCAVADOR_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMDNiNDgzNGVmOGRlMzQxYjFjYjk2MTNjZDUxZTY0ZTA1ZTUxZjVhNWM5YzY4YjMyZDNiZTBmMGM1YjY5NzU5ZTBlMTc3MmE5N2M2YzM1ZTciLCJpYXQiOjE3NzgxNjQ2MjMuNzY5NDIyLCJuYmYiOjE3NzgxNjQ2MjMuNzY5NDI0LCJleHAiOjE4MDk3NDUxOTkuNzY3NjY1LCJzdWIiOiIzNTU4NjMwIiwic2NvcGVzIjpbImFjZXNzYXJfYXBpX3BhZ2EiXX0.s5Gy_7HsV-YifVihZOjveEkG5uLR7zwniZH4-akrJYJ7ncRr7wW3Ac6jLrZBUBMCA1VnFCmabGMJOaUonqvHmFMoULeKO-DAz-bsfrmyw1E19nCvcNslGNEKMbzYza8XEYttiICTSpVO81xFueuMaJ2T63B2v2RCFp7D2C_svpL4To442TJI2V1wB93nXV2kKm5bck6uQESBzfcEYAyNg3mOcOGvvD7aEjRx5mMeDqfpRhhhx-zG553_wQqVEx5MEaNYt2QyM1lbn8gvIYo_FLsob_OemSKA5qjqkUy9g5rxBw97aivUAWX8vRHyROEZf5HiwPCgEQDqshzcC70ac1oY5edXBTskX4D1OHaFMHq5tFJjD9VvqJtYgLHV-tnuNUpzhCi-6UB_e232rmhqoxjICw1M0RmZPvK9SJBk6SeqBFZ7-wRbrmm0PV8JnHq1zLdoGdzcwXEy_62LWynhFeMFsXGMRSNAOi2pc3ljPCUmCqPiKU-45D3BmVp_4N-0IbpRKuDmCZ3MzfgZteTRNJNHKaeI3ft6OcKMiBXMmk5t5pk6clOVep4_PYGGXoZZ9iGFYKXfoNWmfFA0vplpL2KojRsMMWdbMvGIX1RScX3TGGAFWfbxySG6C1gLi4dViblxJq8nQ7QBLA2YEzvaig_kQoyYRcJP9X-rPH2kXmQ';
+
+async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
+  if(!oabNumero)return;
+  if(exibirFeedback){
+    document.getElementById('sync-status').innerHTML='<div class="sync-dot pending"></div><span>Sincronizando processos...</span>';
+    toast('info','Sincronizando...','Buscando processos no Escavador. Aguarde.',4000);
+  }
+  try{
+    // Busca advogado pelo número OAB
+    const respAdv = await fetch(`https://api.escavador.com/api/v1/advogados/oab/${oabUF}/${oabNumero}`,{
+      headers:{'Authorization':'Bearer '+ESCAVADOR_TOKEN,'Accept':'application/json'}
+    });
+    if(!respAdv.ok) throw new Error('OAB não encontrada');
+    const dadosAdv = await respAdv.json();
+    const advogadoId = dadosAdv?.id || dadosAdv?.data?.id;
+    if(!advogadoId) throw new Error('Advogado não encontrado');
+
+    // Busca processos do advogado
+    const respProc = await fetch(`https://api.escavador.com/api/v1/advogados/${advogadoId}/processos?limit=50`,{
+      headers:{'Authorization':'Bearer '+ESCAVADOR_TOKEN,'Accept':'application/json'}
+    });
+    if(!respProc.ok) throw new Error('Erro ao buscar processos');
+    const dadosProc = await respProc.json();
+    const lista = dadosProc?.items || dadosProc?.data || [];
+
+    let importados=0;
+    lista.forEach(p=>{
+      const num = p.numero_cnj || p.numero || p.processo_numero;
+      if(!num)return;
+      if(processos.find(x=>x.num===num))return; // já existe
+      processos.push({
+        id:Date.now()+Math.random(),
+        num,
+        cliente:'— Vincular cliente —',
+        tipo: p.area || p.ramo_direito || 'Não informado',
+        tribunal: p.tribunal?.sigla || p.tribunal_nome || 'Não informado',
+        fase: p.fase || p.ultimo_movimento?.tipo || 'Não informado',
+        mov: p.ultimo_movimento?.descricao || p.ultimo_andamento || 'Importado do Escavador',
+        sync: new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})
+      });
+      importados++;
+    });
+
+    renderProcessos();
+    document.getElementById('sync-status').innerHTML='<div class="sync-dot ok"></div><span>Sincronizado agora</span>';
+    if(exibirFeedback){
+      if(importados>0){
+        toast('success',`${importados} processos importados!`,`Processos sincronizados do Escavador com sucesso.`,6000);
+        notificacoes.unshift({tipo:'success',txt:`<strong>Escavador:</strong> ${importados} processos sincronizados via OAB/${oabUF} ${oabNumero}`,time:'Agora'});
+      } else {
+        toast('info','Nenhum processo novo','Todos os processos já estão cadastrados ou nenhum foi encontrado.',5000);
+      }
+      renderDashNotif();
+    }
+    return importados;
+  } catch(e){
+    console.error('Escavador erro:',e);
+    document.getElementById('sync-status').innerHTML='<div class="sync-dot pending"></div><span>Erro na sincronização</span>';
+    if(exibirFeedback) toast('danger','Erro na sincronização',`${e.message}. Verifique o número OAB e tente novamente.`,6000);
+    return 0;
+  }
+}
+
+async function buscarProcessosPorOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  const btn=document.getElementById('btn-buscar-oab');
+  btn.disabled=true;btn.textContent='Buscando...';
+  document.getElementById('oab-resultado').innerHTML=`<div style="text-align:center;padding:20px;color:var(--txt2);font-size:13px">🔍 Consultando Escavador para OAB/${uf} ${oab}...</div>`;
+  const total = await sincronizarPorOAB(oab, uf, false);
+  btn.disabled=false;btn.textContent='Buscar processos';
+  if(total>0){
+    document.getElementById('oab-resultado').innerHTML=`<div style="color:var(--gtxt);font-size:13px;font-weight:500;padding:12px;background:var(--green);border-radius:var(--r)">✓ ${total} processos importados com sucesso! Acesse a aba <strong>Processos</strong> para visualizar.</div>`;
+  } else {
+    document.getElementById('oab-resultado').innerHTML=`<div style="color:var(--wtxt);font-size:13px;padding:12px;background:var(--warn);border-radius:var(--r)">Nenhum processo novo encontrado para OAB/${uf} ${oab}. Verifique se o número está correto.</div>`;
+  }
+}
+
+// Sincronização automática ao fazer login
+async function sincronizarAoLogin(){
+  if(!usuarioLogado)return;
+  const oab=usuarioLogado.oab?.replace(/\D/g,'');
+  const uf=usuarioLogado.oab?.match(/[A-Z]{2}/)?.[0]||'BA';
+  if(oab) await sincronizarPorOAB(oab, uf, true);
+}
 async function buscarProcessosPorOAB(){
   const oab=document.getElementById('oab-input').value.trim();
   const uf=document.getElementById('oab-uf').value;
