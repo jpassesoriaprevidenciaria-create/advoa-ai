@@ -1360,8 +1360,9 @@ async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
     toast('info','Sincronizando...','Buscando processos no Escavador. Aguarde.',4000);
   }
   try{
-    // Chama o servidor no Render
-    const resp = await fetch(`https://advoa-ai.onrender.com?oab=${oabNumero}&uf=${oabUF}`);
+    // Chama o servidor no Render com OAB e nome
+    const nomeAdv = encodeURIComponent(usuarioLogado?.nome?.replace('Dra. ','').replace('Dr. ','') || '');
+    const resp = await fetch(`https://advoa-ai.onrender.com?oab=${oabNumero}&uf=${oabUF}&nome=${nomeAdv}`);
 
     if(!resp.ok){
       const err = await resp.json().catch(()=>({}));
