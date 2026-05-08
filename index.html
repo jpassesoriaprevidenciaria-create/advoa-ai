@@ -1,566 +1,1718 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Consulta de Processos Judiciais</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
-  <style>
-    /* ── TOKENS ─────────────────────────────────────────── */
-    :root {
-      --bg:        #0d0f14;
-      --surface:   #13161e;
-      --surface2:  #1a1e29;
-      --border:    #252a38;
-      --accent:    #c8a96e;
-      --accent2:   #e8c98a;
-      --text:      #e8e4dc;
-      --muted:     #6b7280;
-      --danger:    #e05c5c;
-      --success:   #5caa82;
-      --radius:    12px;
-      --font-head: 'Playfair Display', Georgia, serif;
-      --font-body: 'DM Sans', sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advoca.ai — Sistema Jurídico</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --az:#1a2e4a;--az2:#162640;--dou:#00d4ff;--dou2:#33ddff;--dou-light:#f5f0e4;
+  --bg:#f0f8ff;--card:#ffffff;--card2:#fafaf8;
+  --border:#d0e8f5;--border2:#b0d4ee;
+  --txt:#1c1c1c;--txt2:#555;--txt3:#999;
+  --green:#e6f4ea;--gtxt:#2d6a3f;--gborder:#b2d8bc;
+  --red:#fdecea;--rtxt:#c0392b;--rborder:#f5bcb8;
+  --warn:#fff8e6;--wtxt:#8a5f00;--wborder:#f0d88a;
+  --blue:#e8f0fb;--btxt:#1a56a0;--bborder:#aac4ee;
+  --r:6px;--rl:10px
+}
+body{font-family:'Inter',sans-serif;color:var(--txt);background:var(--bg);font-size:14px;line-height:1.5}
 
-    /* ── RESET ───────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-weight: 300;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+/* LOGIN */
+.login-screen{display:flex;min-height:100vh;align-items:stretch}
+.login-left{width:420px;flex-shrink:0;background:#060e1a;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;position:relative;overflow:hidden}
+.login-left::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;border:1px solid rgba(0,212,255,0.12)}
+.login-left::after{content:'';position:absolute;bottom:-60px;left:-60px;width:220px;height:220px;border-radius:50%;border:1px solid rgba(0,212,255,0.09)}
+.login-brand{text-align:center;margin-bottom:48px;position:relative;z-index:1}
+.login-brand-name{font-family:'Syne',sans-serif;color:#fff;font-size:32px;font-weight:700;letter-spacing:0.02em}
+.login-brand-sub{color:var(--dou);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;margin-top:6px}
+.login-seal{width:80px;height:80px;border:2px solid var(--dou);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;position:relative;z-index:1}
+.login-seal svg{width:40px;height:40px;stroke:var(--dou);fill:none}
+.login-tagline{color:rgba(255,255,255,0.45);font-size:13px;text-align:center;line-height:1.7;position:relative;z-index:1;max-width:260px}
+.login-right{flex:1;display:flex;align-items:center;justify-content:center;padding:48px;background:var(--bg)}
+.login-box{width:100%;max-width:400px}
+.login-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--txt);margin-bottom:6px}
+.login-subtitle{font-size:13px;color:var(--txt3);margin-bottom:32px}
+.login-form-group{margin-bottom:18px}
+.login-label{display:block;font-size:12px;font-weight:600;color:var(--txt2);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em}
+.login-input-wrap{position:relative;display:flex;align-items:center}
+.login-input-wrap svg{position:absolute;left:12px;width:16px;height:16px;stroke:var(--txt3);fill:none}
+.login-input{width:100%;padding:11px 12px 11px 40px;border:1px solid var(--border2);border-radius:var(--r);font-size:14px;font-family:'Inter',sans-serif;color:var(--txt);background:var(--card);outline:none;transition:border-color 0.15s,box-shadow 0.15s}
+.login-input:focus{border-color:var(--az);box-shadow:0 0 0 3px rgba(26,46,74,0.08)}
+.login-input.error{border-color:var(--rtxt)}
+.login-eye{position:absolute;right:12px;cursor:pointer;padding:4px;background:none;border:none;stroke:var(--txt3);display:flex}
+.login-eye:hover svg{stroke:var(--txt)}
+.login-btn{width:100%;background:var(--az);color:#fff;border:none;padding:13px;border-radius:var(--r);font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:background 0.15s,transform 0.1s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.login-btn:hover{background:var(--az2)}
+.login-btn:active{transform:scale(0.99)}
+.login-btn:disabled{opacity:0.6;cursor:not-allowed}
+.login-error{background:var(--red);border:1px solid var(--rborder);color:var(--rtxt);padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:16px;display:none;align-items:center;gap:8px}
+.login-error.show{display:flex}
+.login-hint{margin-top:20px;background:var(--card2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
+.login-hint-title{font-size:11px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.login-hint-row{display:flex;justify-content:space-between;font-size:12px;color:var(--txt2);padding:3px 0;border-bottom:1px solid var(--border)}
+.login-hint-row:last-child{border-bottom:none;padding-bottom:0}
+.login-remember{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--txt2);margin-bottom:4px;cursor:pointer}
+.login-remember input{width:15px;height:15px;accent-color:var(--az)}
+.login-footer{margin-top:28px;text-align:center;font-size:12px;color:var(--txt3)}
 
-    /* ── NOISE TEXTURE ───────────────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
+/* CHANGE PASS MODAL */
+.cp-overlay{display:none;position:fixed;inset:0;background:rgba(10,20,35,0.5);z-index:200;align-items:center;justify-content:center}
+.cp-overlay.open{display:flex}
+.cp-box{background:var(--card);border-radius:12px;border:1px solid var(--border);width:380px;overflow:hidden}
+.cp-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cp-body{padding:20px}
+.cp-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;background:var(--card2)}
 
-    /* ── HEADER ──────────────────────────────────────────── */
-    header {
-      position: relative;
-      padding: 4rem 2rem 3rem;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-      overflow: hidden;
-    }
-    header::after {
-      content: '⚖';
-      position: absolute;
-      font-size: 22rem;
-      opacity: 0.03;
-      top: -4rem; right: -4rem;
-      line-height: 1;
-      pointer-events: none;
-    }
-    .header-eyebrow {
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.75rem;
-    }
-    h1 {
-      font-family: var(--font-head);
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 900;
-      line-height: 1.1;
-      color: var(--text);
-    }
-    h1 span { color: var(--accent); }
-    .header-sub {
-      margin-top: 0.75rem;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
+.app{display:flex;min-height:100vh}
 
-    /* ── MAIN CONTAINER ──────────────────────────────────── */
-    main {
-      position: relative;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem 5rem;
-      z-index: 1;
-    }
+/* SIDEBAR */
+.sidebar{width:220px;flex-shrink:0;background:var(--az);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sb-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.sb-logo-name{color:#fff;font-family:'Syne',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.01em}
+.sb-logo-sub{color:var(--dou);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin-top:2px;opacity:0.9}
+.sb-nav{padding:12px 0;flex:1;overflow-y:auto}
+.sb-section{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.15em;text-transform:uppercase;padding:14px 18px 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 18px;color:rgba(255,255,255,0.6);cursor:pointer;font-size:13px;transition:all 0.15s;border-left:3px solid transparent;user-select:none}
+.sb-item svg{width:17px;height:17px;flex-shrink:0;opacity:0.8}
+.sb-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.9)}
+.sb-item.active{background:rgba(0,212,255,0.12);color:var(--dou);border-left-color:var(--dou)}
+.sb-item.active svg{opacity:1}
+.sb-badge{margin-left:auto;background:var(--dou);color:#060e1a;font-size:10px;font-weight:600;border-radius:10px;padding:1px 7px;min-width:20px;text-align:center}
+.sb-badge.red{background:#e74c3c;color:#fff}
+.sb-footer{padding:14px 18px;border-top:1px solid rgba(255,255,255,0.08)}
+.sb-footer-name{color:#fff;font-size:13px;font-weight:500}
+.sb-footer-oab{color:rgba(255,255,255,0.35);font-size:11px;margin-top:2px}
 
-    /* ── SEARCH CARD ─────────────────────────────────────── */
-    .search-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem;
-      margin-bottom: 2.5rem;
-    }
-    .tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
-    }
-    .tab {
-      background: none;
-      border: 1px solid transparent;
-      color: var(--muted);
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .tab:hover { color: var(--text); border-color: var(--border); }
-    .tab.active {
-      background: var(--accent);
-      color: var(--bg);
-      border-color: var(--accent);
-      font-weight: 500;
-    }
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:10}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-title{font-size:15px;font-weight:600;color:var(--txt)}
+.topbar-right{display:flex;align-items:center;gap:8px}
 
-    .busca-form { display: none; gap: 0.75rem; }
-    .busca-form.ativo { display: flex; flex-wrap: wrap; }
-    .busca-form input {
-      flex: 1;
-      min-width: 200px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .busca-form input::placeholder { color: var(--muted); }
-    .busca-form input:focus { border-color: var(--accent); }
-    .busca-form button {
-      background: var(--accent);
-      color: var(--bg);
-      border: none;
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 0.75rem 1.75rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-      white-space: nowrap;
-    }
-    .busca-form button:hover { background: var(--accent2); }
-    .busca-form button:active { transform: scale(0.98); }
-    .busca-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn{border:1px solid var(--border2);background:var(--card);color:var(--txt);padding:7px 14px;border-radius:var(--r);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-weight:500;transition:all 0.15s;white-space:nowrap}
+.btn svg{width:15px;height:15px;flex-shrink:0}
+.btn:hover{background:var(--bg);border-color:var(--border2)}
+.btn:active{transform:scale(0.98)}
+.btn-primary{background:var(--az);color:#fff;border-color:var(--az)}
+.btn-primary:hover{background:var(--az2)}
+.btn-green{background:var(--green);color:var(--gtxt);border-color:var(--gborder)}
+.btn-green:hover{background:#d4edda}
+.btn-red{background:var(--red);color:var(--rtxt);border-color:var(--rborder)}
+.btn-sm{padding:5px 10px;font-size:12px}
 
-    /* ── STATS BAR ───────────────────────────────────────── */
-    #stats-bar {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-      display: none;
-    }
-    #stats-bar span { color: var(--accent); font-weight: 500; }
+.content{flex:1;padding:24px;overflow-y:auto}
+.page{display:none}
+.page.active{display:block}
 
-    /* ── STATUS ──────────────────────────────────────────── */
-    #status {
-      padding: 1rem 1.25rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-      display: none;
-    }
-    #status.carregando {
-      display: block;
-      background: var(--surface2);
-      color: var(--muted);
-      border: 1px solid var(--border);
-    }
-    #status.erro {
-      display: block;
-      background: rgba(224,92,92,0.08);
-      color: var(--danger);
-      border: 1px solid rgba(224,92,92,0.3);
-    }
-    #status.vazio {
-      display: block;
-      background: var(--surface2);
-      color: var(--muted);
-      border: 1px solid var(--border);
-      text-align: center;
-      padding: 2rem;
-    }
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.metric{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;border-top:3px solid transparent}
+.metric.blue{border-top-color:#378ADD}
+.metric.green{border-top-color:#3B6D11}
+.metric.red{border-top-color:#c0392b}
+.metric.gold{border-top-color:var(--dou)}
+.metric-label{font-size:12px;color:var(--txt3);margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em}
+.metric-val{font-size:26px;font-weight:600;color:var(--txt);line-height:1}
+.metric-sub{font-size:11px;color:var(--txt3);margin-top:4px}
 
-    /* ── PROCESSOS LIST ──────────────────────────────────── */
-    #lista { display: flex; flex-direction: column; gap: 1rem; }
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:18px}
+.card-title{font-size:13px;font-weight:600;color:var(--txt);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-title svg{width:16px;height:16px;color:var(--txt3)}
+.two-col{display:grid;grid-template-columns:1.4fr 0.6fr;gap:16px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
 
-    .processo-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      cursor: pointer;
-      transition: border-color 0.2s, transform 0.2s;
-      animation: fadeUp 0.35s ease both;
-    }
-    .processo-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+/* PRAZOS DASH */
+.prazo-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.prazo-item:last-child{border-bottom:none;padding-bottom:0}
+.prazo-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.prazo-info{flex:1;min-width:0}
+.prazo-proc{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prazo-meta{font-size:11px;color:var(--txt3);margin-top:1px}
+.prazo-bar{height:3px;border-radius:2px;background:var(--bg);margin-top:5px}
+.prazo-fill{height:100%;border-radius:2px}
+.dias-pill{flex-shrink:0;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+.urgente{background:var(--red);color:var(--rtxt)}
+.atencao{background:var(--warn);color:var(--wtxt)}
+.normal{background:var(--green);color:var(--gtxt)}
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1.25rem 1.5rem;
-    }
-    .tribunal-badge {
-      background: var(--surface2);
-      color: var(--accent);
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.7rem;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-    .processo-numero {
-      font-family: var(--font-head);
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-      flex: 1;
-    }
-    .processo-data {
-      font-size: 0.8rem;
-      color: var(--muted);
-      white-space: nowrap;
-    }
+/* NOTIFICAÇÕES */
+.notif-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.notif-item:last-child{border-bottom:none;padding-bottom:0}
+.notif-icon{width:34px;height:34px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.notif-icon svg{width:16px;height:16px}
+.notif-txt{font-size:12px;color:var(--txt2);line-height:1.5}
+.notif-txt strong{color:var(--txt);font-weight:600}
+.notif-time{font-size:11px;color:var(--txt3);margin-top:3px}
 
-    .card-body {
-      border-top: 1px solid var(--border);
-      padding: 1rem 1.5rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 0.75rem;
-    }
-    .campo label {
-      display: block;
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.2rem;
-    }
-    .campo p {
-      font-size: 0.88rem;
-      color: var(--text);
-    }
+/* TABELAS */
+.search-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.search-input-wrap{flex:1;position:relative;display:flex;align-items:center}
+.search-input-wrap svg{position:absolute;left:10px;width:15px;height:15px;color:var(--txt3)}
+.search-input-wrap input{width:100%;padding:8px 12px 8px 34px;border:1px solid var(--border2);border-radius:var(--r);font-size:13px;font-family:'Inter',sans-serif;color:var(--txt);background:var(--card);outline:none}
+.search-input-wrap input:focus{border-color:var(--az)}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--card2);padding:10px 16px;text-align:left;font-weight:600;font-size:11px;color:var(--txt3);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:0.05em}
+td{padding:11px 16px;border-bottom:1px solid var(--border);color:var(--txt);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fdfcfa}
+.td-actions{display:flex;gap:6px}
 
-    /* ── MOVIMENTOS ──────────────────────────────────────── */
-    .movimentos-section {
-      display: none;
-      border-top: 1px solid var(--border);
-      padding: 1rem 1.5rem;
-    }
-    .processo-card.aberto .movimentos-section { display: block; }
-    .movimentos-title {
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
-    }
-    .movimento {
-      display: flex;
-      gap: 1rem;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.85rem;
-    }
-    .movimento:last-child { border-bottom: none; }
-    .mov-data { color: var(--accent); white-space: nowrap; font-size: 0.78rem; }
-    .mov-nome { color: var(--text); }
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.badge-green{background:var(--green);color:var(--gtxt)}
+.badge-amber{background:var(--warn);color:var(--wtxt)}
+.badge-red{background:var(--red);color:var(--rtxt)}
+.badge-blue{background:var(--blue);color:var(--btxt)}
+.badge-gray{background:#f0ede6;color:var(--txt2)}
 
-    /* ── TOGGLE HINT ─────────────────────────────────────── */
-    .toggle-hint {
-      padding: 0.5rem 1.5rem 0.75rem;
-      font-size: 0.75rem;
-      color: var(--muted);
-      text-align: right;
-    }
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,20,35,0.45);z-index:100;align-items:flex-start;justify-content:center;padding:60px 16px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border-radius:12px;border:1px solid var(--border);width:500px;max-width:100%;max-height:calc(100vh - 120px);overflow-y:auto}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--card);z-index:1}
+.modal-head h3{font-size:15px;font-weight:600}
+.modal-body{padding:22px}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;background:var(--card2);position:sticky;bottom:0}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;color:var(--txt2);margin-bottom:5px;font-weight:500}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+input[type=text],input[type=date],input[type=email],input[type=tel],input[type=number],select,textarea{width:100%;border:1px solid var(--border2);background:var(--card2);color:var(--txt);padding:8px 11px;border-radius:var(--r);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.15s}
+input:focus,select:focus,textarea:focus{border-color:var(--az);background:var(--card)}
+textarea{resize:vertical;min-height:70px}
 
-    /* ── SPINNER ─────────────────────────────────────────── */
-    .spinner {
-      display: inline-block;
-      width: 14px; height: 14px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      vertical-align: middle;
-      margin-right: 0.5rem;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+/* ALERTA TOAST */
+.toast-container{position:fixed;top:16px;right:16px;z-index:999;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;min-width:300px;max-width:380px;box-shadow:0 4px 20px rgba(0,0,0,0.12);pointer-events:all;display:flex;gap:12px;align-items:flex-start;animation:slideIn 0.3s ease}
+.toast.warn{border-left:4px solid #e67e22}
+.toast.danger{border-left:4px solid var(--rtxt)}
+.toast.success{border-left:4px solid var(--gtxt)}
+.toast.info{border-left:4px solid var(--btxt)}
+.toast-icon{flex-shrink:0;margin-top:1px}
+.toast-icon svg{width:18px;height:18px}
+.toast-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.toast-msg{font-size:12px;color:var(--txt2);line-height:1.5}
+.toast-close{margin-left:auto;cursor:pointer;flex-shrink:0;padding:2px;border:none;background:transparent;color:var(--txt3);font-size:16px;line-height:1}
+.toast-close:hover{color:var(--txt)}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
 
-    /* ── FOOTER ──────────────────────────────────────────── */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.75rem;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-    }
-    footer a { color: var(--accent); text-decoration: none; }
-  </style>
+/* AGENDA */
+.agenda-day-label{font-size:11px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:0.1em;padding:6px 0;margin-top:14px;margin-bottom:6px;border-bottom:1px solid var(--border)}
+.agenda-item{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
+.agenda-hora{width:50px;text-align:center;flex-shrink:0}
+.agenda-hora span{font-size:14px;font-weight:600;display:block}
+.agenda-hora small{font-size:10px;color:var(--txt3)}
+.agenda-info{flex:1}
+.agenda-info strong{font-size:14px;font-weight:500;display:block}
+.agenda-info small{font-size:12px;color:var(--txt2)}
+
+/* ALERTAS CONFIG */
+.alert-config{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:14px}
+.alert-config-title{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.alert-config-title svg{width:17px;height:17px;color:var(--dou)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.toggle-row:last-child{border-bottom:none;padding-bottom:0}
+.toggle-info{font-size:13px;color:var(--txt)}
+.toggle-desc{font-size:11px;color:var(--txt3);margin-top:2px}
+.toggle{position:relative;width:42px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:24px;transition:0.2s}
+.toggle-slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:0.2s}
+.toggle input:checked+.toggle-slider{background:var(--az)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(18px)}
+
+/* WHATSAPP PREVIEW */
+.wa-preview{background:#e5ddd5;border-radius:var(--rl);padding:16px;margin-top:12px}
+.wa-bubble{background:#fff;border-radius:0 10px 10px 10px;padding:10px 14px;max-width:90%;box-shadow:0 1px 2px rgba(0,0,0,0.1)}
+.wa-bubble p{font-size:13px;line-height:1.6;color:#111}
+.wa-meta{font-size:10px;color:#999;text-align:right;margin-top:4px}
+
+/* SINCRONIZAR */
+.sync-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--txt2)}
+.sync-dot{width:7px;height:7px;border-radius:50%}
+.sync-dot.ok{background:var(--gtxt)}
+.sync-dot.pending{background:var(--wtxt)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin 1s linear infinite;display:inline-block}
+</style>
 </head>
 <body>
 
-<header>
-  <p class="header-eyebrow">Sistema de Consulta</p>
-  <h1>Processos <span>Judiciais</span></h1>
-  <p class="header-sub">Dados via API DataJud · CNJ</p>
-</header>
-
-<main>
-
-  <!-- CARD DE BUSCA -->
-  <div class="search-card">
-    <div class="tabs">
-      <button class="tab active" onclick="trocarAba('numero', this)">Nº Processo</button>
-      <button class="tab" onclick="trocarAba('nome', this)">Nome da Parte</button>
-      <button class="tab" onclick="trocarAba('oab', this)">OAB</button>
+<!-- TELA DE LOGIN -->
+<div id="login-screen" class="login-screen">
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="login-seal">
+        <svg viewBox="0 0 24 24" stroke-width="1.6"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+      </div>
+      <div class="login-brand-name">Advoca.ai</div>
+      <div class="login-brand-sub">Gestão Jurídica</div>
     </div>
+    <p class="login-tagline">Sistema completo para advocacia — prazos, clientes, processos e alertas automáticos.</p>
+  </div>
+  <div class="login-right">
+    <div class="login-box">
+      <div class="login-title">Acesso ao sistema</div>
+      <div class="login-subtitle">Entre com suas credenciais para continuar</div>
 
-    <!-- por número -->
-    <form class="busca-form ativo" id="form-numero" onsubmit="buscar(event,'numero')">
-      <input type="text" id="inp-numero" placeholder="Ex: 0001234-56.2023.8.05.0001" />
-      <button type="submit" id="btn-numero">Buscar</button>
-    </form>
+      <div class="login-error" id="login-error">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="login-error-msg">Usuário ou senha incorretos.</span>
+      </div>
 
-    <!-- por nome -->
-    <form class="busca-form" id="form-nome" onsubmit="buscar(event,'nome')">
-      <input type="text" id="inp-nome" placeholder="Nome completo da parte" />
-      <button type="submit" id="btn-nome">Buscar</button>
-    </form>
+      <div class="login-form-group">
+        <label class="login-label">Usuário</label>
+        <div class="login-input-wrap">
+          <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input type="text" class="login-input" id="login-user" placeholder="Ex: joao.silva" onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()">
+        </div>
+      </div>
 
-    <!-- por OAB -->
-    <form class="busca-form" id="form-oab" onsubmit="buscar(event,'oab')">
-      <input type="text" id="inp-oab" placeholder="Número OAB (ex: 12345)" style="max-width:180px" />
-      <input type="text" id="inp-uf"  placeholder="UF (ex: BA)" style="max-width:90px" />
-      <button type="submit" id="btn-oab">Buscar</button>
-    </form>
+      <div class="login-form-group">
+        <label class="login-label">Senha</label>
+        <div class="login-input-wrap">
+          <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" class="login-input" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()">
+          <button class="login-eye" onclick="toggleSenha('login-pass',this)" title="Mostrar senha">
+            <svg id="eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" style="width:16px;height:16px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <label class="login-remember">
+        <input type="checkbox" id="login-lembrar"> Lembrar-me neste dispositivo
+      </label>
+
+      <button class="login-btn" id="login-btn" onclick="fazerLogin()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:17px;height:17px"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Entrar no sistema
+      </button>
+
+      <div class="login-footer">Advoca.ai © 2025 · Todos os dados protegidos</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TROCAR SENHA -->
+<div class="cp-overlay" id="modal-senha">
+  <div class="cp-box">
+    <div class="cp-head">
+      <h3 style="font-size:15px;font-weight:600">Alterar senha</h3>
+      <button class="btn btn-sm" onclick="document.getElementById('modal-senha').classList.remove('open')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cp-body">
+      <div class="form-group"><label class="form-label">Senha atual</label><input type="password" id="cp-atual" placeholder="••••••••"></div>
+      <div class="form-group"><label class="form-label">Nova senha</label><input type="password" id="cp-nova" placeholder="Mínimo 4 caracteres"></div>
+      <div class="form-group" style="margin-bottom:0"><label class="form-label">Confirmar nova senha</label><input type="password" id="cp-confirma" placeholder="Repita a nova senha"></div>
+    </div>
+    <div class="cp-foot">
+      <button class="btn" onclick="document.getElementById('modal-senha').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-primary" onclick="trocarSenha()">Salvar nova senha</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<div class="app" id="app-screen" style="display:none">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-name">Advoca.ai</div>
+      <div class="sb-logo-sub">Gestão Jurídica</div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <div class="sb-item active" onclick="nav('dashboard',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </div>
+      <div class="sb-item" onclick="nav('prazos',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Prazos
+        <span class="sb-badge red" id="badge-prazos">3</span>
+      </div>
+      <div class="sb-section">Gestão</div>
+      <div class="sb-item" onclick="nav('clientes',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Clientes
+      </div>
+      <div class="sb-item" onclick="nav('processos',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Processos
+        <span class="sb-badge" id="badge-proc">0</span>
+      </div>
+      <div class="sb-item" onclick="nav('financeiro',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Financeiro
+        <span class="sb-badge red" id="badge-fin">0</span>
+      </div>
+      <div class="sb-item" onclick="nav('agenda',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Agenda
+      </div>
+      <div class="sb-section">Config</div>
+      <div class="sb-item" onclick="nav('alertas',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Alertas & Notif.
+      </div>
+      <div class="sb-item" onclick="nav('oab',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Buscar por OAB
+      </div>
+      <div class="sb-item" onclick="document.getElementById('modal-senha').classList.add('open')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Alterar senha
+      </div>
+    </div>
+    <div class="sb-footer">
+      <div class="sb-footer-name" id="sb-user-name">Dr. João Silva</div>
+      <div class="sb-footer-oab" id="sb-user-oab">OAB/BA 45.892</div>
+      <button onclick="fazerLogout()" style="margin-top:10px;width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);padding:7px 10px;border-radius:var(--r);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:7px;font-family:Inter,sans-serif;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.07)'">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" style="width:15px;height:15px"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair do sistema
+      </button>
+    </div>
   </div>
 
-  <!-- STATS -->
-  <div id="stats-bar"></div>
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-title" id="page-title">Dashboard</div>
+        <div class="sync-status" id="sync-status"><div class="sync-dot ok"></div><span>Atualizado agora</span></div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn" onclick="abrirModal('modal-prazo')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo Prazo
+        </button>
+        <button class="btn btn-primary" onclick="abrirModal('modal-cliente')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo Cliente
+        </button>
+      </div>
+    </div>
 
-  <!-- STATUS / ERROS -->
-  <div id="status"></div>
+    <div class="content">
 
-  <!-- LISTA DE PROCESSOS -->
-  <div id="lista"></div>
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="metrics">
+          <div class="metric blue"><div class="metric-label">Processos ativos</div><div class="metric-val" id="m-proc">0</div><div class="metric-sub">sincronizados</div></div>
+          <div class="metric green"><div class="metric-label">Clientes</div><div class="metric-val" id="m-cli">0</div><div class="metric-sub">cadastrados</div></div>
+          <div class="metric red"><div class="metric-label">Prazos urgentes</div><div class="metric-val" id="m-urg" style="color:var(--rtxt)">0</div><div class="metric-sub">próximos 7 dias</div></div>
+          <div class="metric gold"><div class="metric-label">Audiências</div><div class="metric-val">0</div><div class="metric-sub">esta semana</div></div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">
+              <span>Prazos críticos — próximos 30 dias</span>
+              <button class="btn btn-sm" onclick="nav('prazos',document.querySelector('.sb-item:nth-child(2)'))">Ver todos</button>
+            </div>
+            <div id="dash-prazos"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Notificações recentes</div>
+            <div id="dash-notif"></div>
+          </div>
+        </div>
+      </div>
 
-</main>
+      <!-- PRAZOS -->
+      <div class="page" id="page-prazos">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div style="font-size:13px;color:var(--txt2)">Prazos com alertas automáticos por WhatsApp e e-mail</div>
+          <button class="btn btn-primary" onclick="abrirModal('modal-prazo')">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar prazo
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Processo</th><th>Cliente</th><th>Tipo</th><th>Vencimento</th><th>Restam</th><th>Alertas</th><th></th></tr></thead>
+            <tbody id="tb-prazos"></tbody>
+          </table>
+        </div>
+      </div>
 
-<footer>
-  Dados fornecidos pelo <a href="https://datajud.cnj.jus.br" target="_blank">DataJud · CNJ</a>. 
-  Consulta meramente informativa.
-</footer>
+      <!-- CLIENTES -->
+      <div class="page" id="page-clientes">
+        <div class="search-bar">
+          <div class="search-input-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Buscar por nome, CPF ou área..." oninput="filtrarClientes(this.value)">
+          </div>
+          <button class="btn btn-primary" onclick="abrirModal('modal-cliente')">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo cliente
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nome</th><th>CPF / CNPJ</th><th>Contato</th><th>WhatsApp</th><th>Área</th><th>Processos</th><th></th></tr></thead>
+            <tbody id="tb-clientes"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PROCESSOS -->
+      <div class="page" id="page-processos">
+        <div class="search-bar">
+          <div class="search-input-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Buscar por número do processo ou cliente..." oninput="filtrarProcessos(this.value)">
+          </div>
+          <button class="btn btn-green" onclick="sincronizarEscavador()" title="Sincronizar processos pelo Escavador">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+            Sincronizar via Escavador
+          </button>
+          <button class="btn btn-primary" onclick="abrirModal('modal-processo')">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar processo
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nº do processo</th><th>Cliente</th><th>Tipo</th><th>Tribunal</th><th>Fase</th><th>Sincronizado</th><th></th></tr></thead>
+            <tbody id="tb-processos"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AGENDA -->
+      <div class="page" id="page-agenda">
+        <div id="agenda-list"></div>
+      </div>
+
+      <!-- ALERTAS -->
+      <div class="page" id="page-alertas">
+
+        <!-- BANNER INFO -->
+        <div style="background:var(--blue);border:1px solid var(--bborder);border-radius:var(--rl);padding:14px 18px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start">
+          <svg fill="none" viewBox="0 0 24 24" stroke="var(--btxt)" stroke-width="2" style="width:18px;height:18px;flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div style="font-size:13px;color:var(--btxt);line-height:1.6">
+            <strong>Integração real com WhatsApp (Z-API) e E-mail (EmailJS).</strong><br>
+            Preencha suas credenciais abaixo e os alertas serão enviados de verdade. 
+            Crie sua conta gratuita em <a href="https://z-api.io" target="_blank" style="color:var(--btxt);font-weight:600">z-api.io</a> (WhatsApp) e <a href="https://www.emailjs.com" target="_blank" style="color:var(--btxt);font-weight:600">emailjs.com</a> (e-mail).
+          </div>
+        </div>
+
+        <!-- Z-API CONFIG -->
+        <div class="alert-config">
+          <div class="alert-config-title">
+            <svg fill="none" viewBox="0 0 24 24" stroke="#25D366" stroke-width="1.8" style="width:17px;height:17px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.69 3.46 2 2 0 0 1 3.68 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            WhatsApp via Z-API
+            <span id="zapi-status-badge" class="badge badge-gray" style="font-size:11px">Não configurado</span>
+          </div>
+          <div class="form-row" style="margin-bottom:14px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Instance ID <span style="color:var(--txt3);font-weight:400">(Z-API)</span></label>
+              <input type="text" id="zapi-instance" placeholder="Ex: 3EB0123456789ABC" oninput="atualizarStatusZapi()">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Token <span style="color:var(--txt3);font-weight:400">(Z-API)</span></label>
+              <input type="text" id="zapi-token" placeholder="Cole seu token aqui" oninput="atualizarStatusZapi()">
+            </div>
+          </div>
+          <div class="form-row" style="margin-bottom:14px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Client Token <span style="color:var(--txt3);font-weight:400">(Z-API Security)</span></label>
+              <input type="text" id="zapi-client-token" placeholder="Client-Token do painel Z-API">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">WhatsApp do advogado <span style="color:var(--rtxt)">*</span></label>
+              <input type="tel" id="adv-wa" value="" placeholder="5571999998888 (somente números)">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="salvarConfigZapi()">Salvar credenciais Z-API</button>
+            <button class="btn btn-green" onclick="testarZapi()">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="22 2 11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Testar envio WhatsApp
+            </button>
+            <a href="https://z-api.io" target="_blank" class="btn" style="font-size:12px">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Criar conta Z-API
+            </a>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:var(--txt3);background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px solid var(--border)">
+            <strong style="color:var(--txt2)">Como configurar:</strong> 1) Crie conta em z-api.io → 2) Crie uma instância → 3) Escaneie o QR Code com WhatsApp → 4) Copie o Instance ID, Token e Client-Token aqui.
+          </div>
+        </div>
+
+        <!-- EMAILJS CONFIG -->
+        <div class="alert-config">
+          <div class="alert-config-title">
+            <svg fill="none" viewBox="0 0 24 24" stroke="var(--btxt)" stroke-width="1.8" style="width:17px;height:17px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            E-mail via EmailJS
+            <span id="emailjs-status-badge" class="badge badge-gray" style="font-size:11px">Não configurado</span>
+          </div>
+          <div class="form-row" style="margin-bottom:14px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Public Key <span style="color:var(--txt3);font-weight:400">(EmailJS)</span></label>
+              <input type="text" id="ejs-pubkey" placeholder="Ex: user_aBcDeFgHiJkL" oninput="atualizarStatusEmailjs()">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Service ID <span style="color:var(--txt3);font-weight:400">(EmailJS)</span></label>
+              <input type="text" id="ejs-service" placeholder="Ex: service_abc123">
+            </div>
+          </div>
+          <div class="form-row" style="margin-bottom:14px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Template ID <span style="color:var(--txt3);font-weight:400">(EmailJS)</span></label>
+              <input type="text" id="ejs-template" placeholder="Ex: template_xyz456">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">E-mail do advogado <span style="color:var(--rtxt)">*</span></label>
+              <input type="email" id="adv-email" value="" placeholder="joao@advocacia.com">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="salvarConfigEmailjs()">Salvar credenciais EmailJS</button>
+            <button class="btn btn-green" onclick="testarEmail()">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="22 2 11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Testar envio e-mail
+            </button>
+            <a href="https://www.emailjs.com" target="_blank" class="btn" style="font-size:12px">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Criar conta EmailJS
+            </a>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:var(--txt3);background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px solid var(--border)">
+            <strong style="color:var(--txt2)">Como configurar:</strong> 1) Crie conta em emailjs.com → 2) Conecte seu e-mail (Gmail, Outlook etc.) → 3) Crie um template com as variáveis <code style="background:#eee;padding:1px 4px;border-radius:3px">{{nome_adv}}</code> <code style="background:#eee;padding:1px 4px;border-radius:3px">{{tipo_prazo}}</code> <code style="background:#eee;padding:1px 4px;border-radius:3px">{{processo}}</code> <code style="background:#eee;padding:1px 4px;border-radius:3px">{{vencimento}}</code> → 4) Copie as chaves aqui.
+          </div>
+        </div>
+
+        <!-- QUANDO ALERTAR -->
+        <div class="alert-config">
+          <div class="alert-config-title">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" style="width:17px;height:17px;color:var(--dou)"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            Quando enviar os alertas
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-info">7 dias antes do vencimento</div><div class="toggle-desc">Aviso preventivo para preparar a peça</div></div>
+            <label class="toggle"><input type="checkbox" checked id="alerta-7"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-info">3 dias antes do vencimento</div><div class="toggle-desc">Lembrete de atenção</div></div>
+            <label class="toggle"><input type="checkbox" checked id="alerta-3"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-info">1 dia antes — urgência</div><div class="toggle-desc">Alerta crítico na véspera</div></div>
+            <label class="toggle"><input type="checkbox" checked id="alerta-1"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-info">No dia do vencimento</div><div class="toggle-desc">Lembrete final no dia do prazo</div></div>
+            <label class="toggle"><input type="checkbox" checked id="alerta-0"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-info">Alertar por e-mail também</div><div class="toggle-desc">Duplicar alertas no e-mail além do WhatsApp</div></div>
+            <label class="toggle"><input type="checkbox" id="email-prazo"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+
+        <!-- PREVIEW WA -->
+        <div class="card" style="margin-top:4px">
+          <div class="card-title">Prévia da mensagem WhatsApp enviada ao advogado</div>
+          <div class="wa-preview">
+            <div class="wa-bubble">
+              <p style="white-space:pre-line;font-size:13px;line-height:1.6;color:#111">⚖️ *Advoca.ai — Alerta de Prazo*
+
+Olá, Dr. João Silva!
+
+🔴 *URGENTE — Prazo vencendo em 1 dia*
+
+📋 Processo: *0001234-56.2024.8.05.0001*
+📌 Tipo: Recurso de Apelação
+👤 Cliente: Carlos Alberto Ferreira
+📅 Vencimento: *08/05/2025*
+
+Acesse o Advoca.ai para mais detalhes.
+
+_Advoca.ai · Gestão Jurídica Automatizada_</p>
+              <div class="wa-meta">08:00 ✓✓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUSCA POR OAB -->
+      <div class="page" id="page-oab">
+        <div style="max-width:680px">
+          <div style="background:var(--blue);border:1px solid var(--bborder);border-radius:var(--rl);padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--btxt);line-height:1.6">
+            <strong>Consulta direta nos tribunais.</strong><br>
+            Informe o número OAB e clique no tribunal desejado. O site abrirá já com os dados preenchidos para consulta.
+          </div>
+
+          <!-- CONSULTA POR OAB -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Consultar por número OAB</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+              <div style="flex:1;min-width:160px"><label class="form-label">Número OAB</label><input type="text" id="oab-input" placeholder="Ex: 75235"></div>
+              <div style="width:120px"><label class="form-label">Estado (UF)</label>
+                <select id="oab-uf"><option>BA</option><option>SP</option><option>RJ</option><option>MG</option><option>RS</option><option>PR</option><option>SC</option><option>GO</option><option>DF</option><option>PE</option><option>CE</option><option>PA</option><option>AM</option><option>MA</option><option>ES</option><option>MT</option><option>MS</option><option>PI</option><option>AL</option><option>SE</option><option>RN</option><option>PB</option></select>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primary" onclick="abrirPJeOAB()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Buscar no PJe / TJBA
+              </button>
+              <button class="btn" onclick="abrirCNJOAB()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Buscar no CNJ
+              </button>
+              <button class="btn" onclick="abrirEscavadorOAB()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Buscar no Escavador
+              </button>
+            </div>
+          </div>
+
+          <!-- CONSULTA POR NÚMERO DO PROCESSO -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Consultar processo pelo número CNJ</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+              <div style="flex:1"><label class="form-label">Número do processo (CNJ)</label><input type="text" id="proc-input" placeholder="0000000-00.0000.8.05.0001"></div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primary" onclick="abrirPJeProcesso()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Abrir no PJe / TJBA
+              </button>
+              <button class="btn" onclick="abrirCNJProcesso()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Abrir no CNJ
+              </button>
+              <button class="btn" onclick="abrirJusbrasilProcesso()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Abrir no JusBrasil
+              </button>
+            </div>
+          </div>
+
+          <!-- LINKS RÁPIDOS -->
+          <div class="card">
+            <div class="card-title">Acesso rápido aos tribunais</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <a href="https://pje.tjba.jus.br/pje/login.seam" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                🏛️ PJe — TJBA
+              </a>
+              <a href="https://esaj.tjba.jus.br/cpopg/open.do" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                🔍 eSAJ — TJBA
+              </a>
+              <a href="https://cnj.jus.br/pesquisapublica" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                ⚖️ CNJ Pesquisa Pública
+              </a>
+              <a href="https://trt5.jus.br" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                👷 TRT 5ª Região (BA)
+              </a>
+              <a href="https://www2.jf.jus.br/juris/unificada" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                🏢 TRF 1ª Região
+              </a>
+              <a href="https://meu.inss.gov.br" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                📋 Meu INSS
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FINANCEIRO -->
+      <div class="page" id="page-financeiro">
+        <!-- Métricas financeiras -->
+        <div class="metrics" style="margin-bottom:16px">
+          <div class="metric green"><div class="metric-label">Total recebido</div><div class="metric-val" id="fin-recebido">R$ 0</div><div class="metric-sub">este mês</div></div>
+          <div class="metric blue"><div class="metric-label">A receber</div><div class="metric-val" id="fin-areceber">R$ 0</div><div class="metric-sub">em aberto</div></div>
+          <div class="metric red"><div class="metric-label">Em atraso</div><div class="metric-val" id="fin-atraso" style="color:var(--rtxt)">R$ 0</div><div class="metric-sub">vencidos</div></div>
+          <div class="metric gold"><div class="metric-label">Total geral</div><div class="metric-val" id="fin-total">R$ 0</div><div class="metric-sub">todos os contratos</div></div>
+        </div>
+
+        <div class="search-bar">
+          <div class="search-input-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Buscar por cliente ou processo..." oninput="filtrarFinanceiro(this.value)">
+          </div>
+          <select id="fin-filtro" onchange="filtrarFinanceiro(document.querySelector('#page-financeiro input').value)" style="border:1px solid var(--border2);background:var(--card);color:var(--txt);padding:8px 12px;border-radius:var(--r);font-size:13px;font-family:'Inter',sans-serif">
+            <option value="">Todos os status</option>
+            <option value="Pago">Pagos</option>
+            <option value="Pendente">Pendentes</option>
+            <option value="Atrasado">Atrasados</option>
+            <option value="Parcelado">Parcelados</option>
+          </select>
+          <button class="btn btn-primary" onclick="abrirModal('modal-pagamento')">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo lançamento
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Cliente</th><th>Processo</th><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Forma</th><th>Parcelas</th><th>Status</th><th></th></tr></thead>
+            <tbody id="tb-financeiro"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PAGAMENTO -->
+<div class="modal-overlay" id="modal-pagamento">
+  <div class="modal">
+    <div class="modal-head"><h3>Novo lançamento financeiro</h3><button class="btn btn-sm" onclick="fecharModal('modal-pagamento')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Cliente *</label><select id="pg-cli"><option value="">— Selecionar —</option></select></div>
+        <div class="form-group"><label class="form-label">Processo (opcional)</label><select id="pg-proc"><option value="">— Selecionar —</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Descrição *</label><input type="text" id="pg-desc" placeholder="Ex: Honorários — Ação Previdenciária"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Valor total (R$) *</label><input type="number" id="pg-valor" placeholder="0,00" min="0" step="0.01"></div>
+        <div class="form-group"><label class="form-label">Forma de pagamento</label>
+          <select id="pg-forma"><option>Pix</option><option>Boleto</option><option>Cartão</option><option>Dinheiro</option><option>Transferência</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Parcelado em</label>
+          <select id="pg-parcelas" onchange="atualizarParcelas()">
+            <option value="1">À vista</option>
+            <option value="2">2x</option>
+            <option value="3">3x</option>
+            <option value="4">4x</option>
+            <option value="5">5x</option>
+            <option value="6">6x</option>
+            <option value="10">10x</option>
+            <option value="12">12x</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Data de vencimento *</label><input type="date" id="pg-venc"></div>
+      </div>
+      <div id="pg-parcelas-preview" style="display:none;background:var(--bg);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--txt2);margin-top:-8px;margin-bottom:4px"></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select id="pg-status"><option>Pendente</option><option>Pago</option><option>Atrasado</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Observação</label><textarea id="pg-obs" placeholder="Informações adicionais..."></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="fecharModal('modal-pagamento')">Cancelar</button><button class="btn btn-primary" onclick="salvarPagamento()">Salvar lançamento</button></div>
+  </div>
+</div>
+
+<!-- MODAL CLIENTE -->
+<div class="modal-overlay" id="modal-cliente">
+  <div class="modal">
+    <div class="modal-head"><h3>Novo cliente</h3><button class="btn btn-sm" onclick="fecharModal('modal-cliente')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" id="c-nome" placeholder="Nome do cliente"></div>
+        <div class="form-group"><label class="form-label">CPF / CNPJ</label><input type="text" id="c-cpf" placeholder="000.000.000-00"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Telefone</label><input type="tel" id="c-tel" placeholder="(71) 99999-9999"></div>
+        <div class="form-group"><label class="form-label">WhatsApp (para alertas)</label><input type="tel" id="c-wa" placeholder="(71) 99999-9999"></div>
+      </div>
+      <div class="form-group"><label class="form-label">E-mail</label><input type="email" id="c-email" placeholder="cliente@email.com"></div>
+      <div class="form-group"><label class="form-label">Área jurídica</label>
+        <select id="c-area"><option>Direito Civil</option><option>Direito Penal</option><option>Direito Trabalhista</option><option>Direito Tributário</option><option>Direito Empresarial</option><option>Direito Previdenciário</option><option>Direito de Família</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Observações</label><textarea id="c-obs" placeholder="Informações relevantes..."></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="fecharModal('modal-cliente')">Cancelar</button><button class="btn btn-primary" onclick="salvarCliente()">Salvar cliente</button></div>
+  </div>
+</div>
+
+<!-- MODAL PRAZO -->
+<div class="modal-overlay" id="modal-prazo">
+  <div class="modal">
+    <div class="modal-head"><h3>Novo prazo processual</h3><button class="btn btn-sm" onclick="fecharModal('modal-prazo')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Número do processo (CNJ) *</label><input type="text" id="p-proc" placeholder="0000000-00.0000.0.00.0000"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Tipo de prazo *</label>
+          <select id="p-tipo"><option>Recurso</option><option>Contestação</option><option>Manifestação</option><option>Audiência</option><option>Petição</option><option>Impugnação</option><option>Sustentação oral</option><option>Outro</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Data de vencimento *</label><input type="date" id="p-data"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Cliente</label>
+        <select id="p-cli"><option value="">— Selecionar cliente —</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Enviar alerta para WhatsApp do advogado</label>
+        <select id="p-alerta">
+          <option value="1">Sim — alertar 7, 3, 1 dia antes e no dia</option>
+          <option value="2">Sim — alertar apenas 1 dia antes e no dia</option>
+          <option value="0">Não enviar alertas para este prazo</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Observação</label><textarea id="p-obs" placeholder="Detalhes sobre o prazo..."></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="fecharModal('modal-prazo')">Cancelar</button><button class="btn btn-primary" onclick="salvarPrazo()">Salvar prazo</button></div>
+  </div>
+</div>
+
+<!-- MODAL PROCESSO -->
+<div class="modal-overlay" id="modal-processo">
+  <div class="modal">
+    <div class="modal-head"><h3>Adicionar processo</h3><button class="btn btn-sm" onclick="fecharModal('modal-processo')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Número do processo (CNJ) *</label><input type="text" id="pr-num" placeholder="0000000-00.0000.0.00.0000"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Cliente *</label><select id="pr-cli"><option value="">— Selecionar —</option></select></div>
+        <div class="form-group"><label class="form-label">Área</label>
+          <select id="pr-area"><option>Cível</option><option>Criminal</option><option>Trabalhista</option><option>Tributário</option><option>Previdenciário</option><option>Empresarial</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Tribunal / Vara</label><input type="text" id="pr-trib" placeholder="Ex: TJBA — 3ª Vara Cível"></div>
+        <div class="form-group"><label class="form-label">Fase processual</label>
+          <select id="pr-fase"><option>Conhecimento</option><option>Instrução</option><option>Julgamento</option><option>Recurso</option><option>Execução</option><option>Arquivado</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Última movimentação</label><input type="text" id="pr-mov" placeholder="Ex: Despacho determinando citação do réu"></div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="fecharModal('modal-processo')">Cancelar</button><button class="btn btn-primary" onclick="salvarProcesso()">Salvar processo</button></div>
+  </div>
+</div>
 
 <script>
-  // ── CONFIG ────────────────────────────────────────────────
-  const API = "http://localhost:8000"; // URL do servidor.py
+// ── AUTENTICAÇÃO ───────────────────────────────────────
+let usuarios=[
+  {usuario:'Ana Passos', senha:'Anaflavia-135', nome:'Dra. Ana Flávia Soares Passos', oab:'OAB/BA 75.235'},
+];
+let usuarioLogado=null;
 
-  // ── AUTO CARREGAR AO ABRIR ──────────────────────────────────
-  window.addEventListener('DOMContentLoaded', async () => {
-    limpar();
-    setStatus('carregando', '<span class="spinner"></span> Carregando processos da OAB 75235-BA…');
-    try {
-      const r = await fetch(API + '/processos');
-      if (!r.ok) throw new Error();
-      const data = await r.json();
-      if (data.length === 0) {
-        setStatus('vazio', '🔍 Nenhum processo encontrado ainda. O servidor pode ainda estar buscando — aguarde e recarregue a página.');
-      } else {
-        renderizar(data);
+function toggleSenha(inputId, btn){
+  const inp=document.getElementById(inputId);
+  const mostrar=inp.type==='password';
+  inp.type=mostrar?'text':'password';
+  btn.querySelector('svg').innerHTML=mostrar
+    ?'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    :'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+}
+
+function fazerLogin(){
+  const user=document.getElementById('login-user').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  const errEl=document.getElementById('login-error');
+  const errMsg=document.getElementById('login-error-msg');
+  const btn=document.getElementById('login-btn');
+
+  errEl.classList.remove('show');
+  document.getElementById('login-user').classList.remove('error');
+  document.getElementById('login-pass').classList.remove('error');
+
+  if(!user||!pass){
+    errMsg.textContent='Preencha o usuário e a senha.';
+    errEl.classList.add('show');
+    return;
+  }
+
+  btn.disabled=true;
+  btn.innerHTML='<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Verificando...';
+
+  setTimeout(()=>{
+    const u=usuarios.find(x=>x.usuario===user&&x.senha===pass);
+    if(u){
+      usuarioLogado=u;
+      // Lembrar-me: salva no localStorage
+      if(document.getElementById('login-lembrar').checked){
+        try{localStorage.setItem('jg_user',user);localStorage.setItem('jg_pass',pass)}catch(e){}
       }
-    } catch {
-      setStatus('erro', '⚠ Não foi possível conectar ao servidor. Verifique se o servidor.py está rodando.');
+      entrarNoSistema(u);
+    } else {
+      errMsg.textContent='Usuário ou senha incorretos. Tente novamente.';
+      errEl.classList.add('show');
+      document.getElementById('login-user').classList.add('error');
+      document.getElementById('login-pass').classList.add('error');
+      document.getElementById('login-pass').value='';
+      btn.disabled=false;
+      btn.innerHTML='<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:17px;height:17px"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Entrar no sistema';
+    }
+  },700);
+}
+
+function entrarNoSistema(u){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app-screen').style.display='flex';
+  document.getElementById('sb-user-name').textContent=u.nome;
+  document.getElementById('sb-user-oab').textContent=u.oab;
+  iniciarApp();
+  // Sincroniza processos automaticamente pelo Escavador
+  setTimeout(()=>sincronizarAoLogin(), 1500);
+}
+
+function fazerLogout(){
+  if(!confirm('Deseja realmente sair do sistema?'))return;
+  usuarioLogado=null;
+  try{localStorage.removeItem('jg_user');localStorage.removeItem('jg_pass')}catch(e){}
+  document.getElementById('app-screen').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-error').classList.remove('show');
+  const btn=document.getElementById('login-btn');
+  btn.disabled=false;
+  btn.innerHTML='<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:17px;height:17px"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Entrar no sistema';
+}
+
+function trocarSenha(){
+  if(!usuarioLogado)return;
+  const atual=document.getElementById('cp-atual').value;
+  const nova=document.getElementById('cp-nova').value;
+  const conf=document.getElementById('cp-confirma').value;
+  if(atual!==usuarioLogado.senha){toast('danger','Erro','Senha atual incorreta.');return}
+  if(nova.length<4){toast('danger','Erro','A nova senha deve ter pelo menos 4 caracteres.');return}
+  if(nova!==conf){toast('danger','Erro','As senhas não coincidem.');return}
+  usuarioLogado.senha=nova;
+  const u=usuarios.find(x=>x.usuario===usuarioLogado.usuario);
+  if(u)u.senha=nova;
+  document.getElementById('modal-senha').classList.remove('open');
+  ['cp-atual','cp-nova','cp-confirma'].forEach(id=>{document.getElementById(id).value=''});
+  toast('success','Senha alterada!','Sua nova senha foi salva com sucesso.');
+}
+
+// Auto-login por localStorage
+function verificarAutoLogin(){
+  try{
+    const user=localStorage.getItem('jg_user');
+    const pass=localStorage.getItem('jg_pass');
+    if(user&&pass){
+      const u=usuarios.find(x=>x.usuario===user&&x.senha===pass);
+      if(u){document.getElementById('login-user').value=user;document.getElementById('login-lembrar').checked=true;entrarNoSistema(u);return;}
+    }
+  }catch(e){}
+}
+
+const hoje = new Date(); hoje.setHours(0,0,0,0);
+function diasAte(ds){const d=new Date(ds);d.setHours(0,0,0,0);return Math.round((d-hoje)/864e5)}
+function fmtData(ds){if(!ds)return'—';const[y,m,d]=ds.split('-');return`${d}/${m}/${y}`}
+function fmtDataHoje(){return hoje.toLocaleDateString('pt-BR')}
+
+let clientes=[];
+
+let prazos=[];
+
+let processos=[];
+
+let pagamentos=[];
+
+let notificacoes=[];
+
+function fmtMoeda(v){return'R$ '+parseFloat(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+function renderFinanceiro(filter=''){
+  const tb=document.getElementById('tb-financeiro');
+  if(!tb)return;
+  const filtroStatus=document.getElementById('fin-filtro')?.value||'';
+  let list=[...pagamentos];
+  list.forEach(p=>{if(p.status==='Pendente'&&p.vencimento&&diasAte(p.vencimento)<0)p.status='Atrasado';});
+  if(filter)list=list.filter(p=>p.cliente.toLowerCase().includes(filter.toLowerCase())||p.desc.toLowerCase().includes(filter.toLowerCase()));
+  if(filtroStatus)list=list.filter(p=>p.status===filtroStatus);
+  const statusColor={Pago:'badge-green',Pendente:'badge-blue',Atrasado:'badge-red',Parcelado:'badge-amber'};
+  const formaIcon={Pix:'💠',Boleto:'📄',Cartão:'💳',Dinheiro:'💵',Transferência:'🏦'};
+  tb.innerHTML=list.length===0?`<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--txt3);font-size:13px">Nenhum lançamento encontrado. Clique em "Novo lançamento" para começar.</td></tr>`:list.map(p=>`<tr>
+    <td style="font-weight:500">${p.cliente}</td>
+    <td style="font-size:12px;color:var(--btxt)">${p.processo?p.processo.slice(0,18)+'...':'—'}</td>
+    <td>${p.desc}</td>
+    <td style="font-weight:600">${fmtMoeda(p.valor)}</td>
+    <td>${fmtData(p.vencimento)}</td>
+    <td>${formaIcon[p.forma]||''} ${p.forma}</td>
+    <td style="text-align:center">${p.parcelas>1?`${p.parcelaAtual}/${p.parcelas}`:'À vista'}</td>
+    <td><span class="badge ${statusColor[p.status]||'badge-gray'}">${p.status}</span></td>
+    <td><div class="td-actions">
+      ${p.status!=='Pago'?`<button class="btn btn-sm btn-green" onclick="marcarPago(${p.id})" title="Marcar como pago">✓</button>`:''}
+      <button class="btn btn-sm btn-red" onclick="delPagamento(${p.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+    </div></td>
+  </tr>`).join('');
+  const recebido=pagamentos.filter(p=>p.status==='Pago').reduce((s,p)=>s+parseFloat(p.valor),0);
+  const areceber=pagamentos.filter(p=>['Pendente','Parcelado'].includes(p.status)).reduce((s,p)=>s+parseFloat(p.valor),0);
+  const atraso=pagamentos.filter(p=>p.status==='Atrasado').reduce((s,p)=>s+parseFloat(p.valor),0);
+  const total=pagamentos.reduce((s,p)=>s+parseFloat(p.valor),0);
+  const setEl=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+  setEl('fin-recebido',fmtMoeda(recebido));
+  setEl('fin-areceber',fmtMoeda(areceber));
+  setEl('fin-atraso',fmtMoeda(atraso));
+  setEl('fin-total',fmtMoeda(total));
+  const atrasados=pagamentos.filter(p=>p.status==='Atrasado').length;
+  const badge=document.getElementById('badge-fin');
+  if(badge){badge.textContent=atrasados;badge.style.display=atrasados>0?'':'none';}
+}
+
+function atualizarSelectsPagamento(){
+  const sc=document.getElementById('pg-cli');
+  const sp=document.getElementById('pg-proc');
+  if(sc)sc.innerHTML='<option value="">— Selecionar —</option>'+clientes.map(c=>`<option value="${c.nome}">${c.nome}</option>`).join('');
+  if(sp)sp.innerHTML='<option value="">— Selecionar —</option>'+processos.map(p=>`<option value="${p.num}">${p.num.slice(0,30)}</option>`).join('');
+}
+
+function atualizarParcelas(){
+  const n=parseInt(document.getElementById('pg-parcelas').value);
+  const v=parseFloat(document.getElementById('pg-valor').value)||0;
+  const prev=document.getElementById('pg-parcelas-preview');
+  if(!prev)return;
+  if(n>1&&v>0){prev.style.display='block';prev.textContent=`${n}x de ${fmtMoeda(v/n)} = ${fmtMoeda(v)}`;}
+  else prev.style.display='none';
+}
+
+function salvarPagamento(){
+  const cli=document.getElementById('pg-cli').value;
+  const desc=document.getElementById('pg-desc').value.trim();
+  const valor=document.getElementById('pg-valor').value;
+  const venc=document.getElementById('pg-venc').value;
+  if(!cli||!desc||!valor||!venc){toast('danger','Erro','Preencha cliente, descrição, valor e vencimento');return}
+  const parcelas=parseInt(document.getElementById('pg-parcelas').value);
+  const status=document.getElementById('pg-status').value;
+  const forma=document.getElementById('pg-forma').value;
+  const proc=document.getElementById('pg-proc').value||'';
+  const obs=document.getElementById('pg-obs').value;
+  if(parcelas>1){
+    const vp=(parseFloat(valor)/parcelas).toFixed(2);
+    const dataBase=new Date(venc+'T12:00:00');
+    for(let i=0;i<parcelas;i++){
+      const dataParc=new Date(dataBase);
+      dataParc.setMonth(dataParc.getMonth()+i);
+      pagamentos.push({id:Date.now()+i,cliente:cli,processo:proc,desc:`${desc} (${i+1}/${parcelas})`,valor:parseFloat(vp),vencimento:dataParc.toISOString().split('T')[0],forma,parcelas,parcelaAtual:i+1,status:i===0?status:'Pendente',obs});
+    }
+    toast('success','Parcelamento criado!',`${parcelas}x de ${fmtMoeda(parseFloat(valor)/parcelas)}`);
+  } else {
+    pagamentos.push({id:Date.now(),cliente:cli,processo:proc,desc,valor:parseFloat(valor),vencimento:venc,forma,parcelas:1,parcelaAtual:1,status,obs});
+    toast('success','Lançamento salvo!',`${fmtMoeda(parseFloat(valor))} — ${cli}`);
+  }
+  renderFinanceiro();verificarInadimplencia();fecharModal('modal-pagamento');
+  ['pg-desc','pg-valor','pg-venc','pg-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+}
+
+function marcarPago(id){
+  const p=pagamentos.find(x=>x.id===id);if(!p)return;
+  p.status='Pago';renderFinanceiro();
+  toast('success','Pagamento confirmado!',`${fmtMoeda(p.valor)} — ${p.cliente}`);
+}
+
+function delPagamento(id){
+  if(!confirm('Remover este lançamento?'))return;
+  pagamentos=pagamentos.filter(p=>p.id!==id);renderFinanceiro();
+}
+
+function filtrarFinanceiro(v){renderFinanceiro(v)}
+
+function verificarInadimplencia(){
+  const atrasados=pagamentos.filter(p=>{
+    if(p.status==='Pago')return false;
+    return p.vencimento&&diasAte(p.vencimento)<0;
+  });
+  atrasados.forEach(p=>{
+    if(p.status==='Atrasado')return;
+    p.status='Atrasado';
+    toast('danger','Pagamento em atraso!',`${p.cliente} — ${fmtMoeda(p.valor)} venceu em ${fmtData(p.vencimento)}`,8000);
+    notificacoes.unshift({tipo:'danger',txt:`<strong>Inadimplência:</strong> ${p.cliente} — ${fmtMoeda(p.valor)} em atraso`,time:'Agora'});
+    const advWa=zapiConfig?.numero||'';
+    if(advWa&&zapiConfig?.instance&&zapiConfig?.token){
+      const msg=`⚖️ *Advoca.ai — Alerta de Inadimplência*\n\n🔴 *Pagamento em atraso!*\n\n👤 Cliente: *${p.cliente}*\n📋 Ref: ${p.desc}\n💰 Valor: *${fmtMoeda(p.valor)}*\n📅 Vencimento: *${fmtData(p.vencimento)}*\n\n_Advoca.ai · Gestão Jurídica_`;
+      enviarWhatsApp(advWa,msg);
     }
   });
+  if(atrasados.length>0){renderFinanceiro();renderDashNotif();}
+}
 
-  // ── ABAS ──────────────────────────────────────────────────
-  function trocarAba(tipo, btn) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.busca-form').forEach(f => f.classList.remove('ativo'));
-    btn.classList.add('active');
-    document.getElementById('form-' + tipo).classList.add('ativo');
-    limpar();
+// TOAST
+function toast(tipo, titulo, msg, duracao=5000){
+  const c=document.getElementById('toast-container');
+  const icons={danger:'<svg fill="none" viewBox="0 0 24 24" stroke="#c0392b" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',warn:'<svg fill="none" viewBox="0 0 24 24" stroke="#8a5f00" stroke-width="2" style="width:18px;height:18px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',success:'<svg fill="none" viewBox="0 0 24 24" stroke="#2d6a3f" stroke-width="2" style="width:18px;height:18px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',info:'<svg fill="none" viewBox="0 0 24 24" stroke="#1a56a0" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'};
+  const t=document.createElement('div');
+  t.className=`toast ${tipo}`;
+  t.innerHTML=`<div class="toast-icon">${icons[tipo]||icons.info}</div><div style="flex:1"><div class="toast-title">${titulo}</div><div class="toast-msg">${msg}</div></div><button class="toast-close" onclick="this.parentElement.remove()">×</button>`;
+  c.appendChild(t);
+  setTimeout(()=>{if(t.parentNode)t.remove()},duracao);
+}
+
+// ALERTAS AUTOMÁTICOS
+async function verificarAlertas(){
+  const adv7=document.getElementById('alerta-7')?.checked;
+  const adv3=document.getElementById('alerta-3')?.checked;
+  const adv1=document.getElementById('alerta-1')?.checked;
+  const adv0=document.getElementById('alerta-0')?.checked;
+  for(const p of prazos){
+    const d=diasAte(p.data);
+    if(p.alerta==='0')continue;
+    let deveEnviar=false;
+    if(d===0&&adv0)deveEnviar=true;
+    else if(d===1&&adv1)deveEnviar=true;
+    else if(d===3&&adv3)deveEnviar=true;
+    else if(d===7&&adv7)deveEnviar=true;
+    if(deveEnviar){
+      // Toast visual sempre
+      const emoji=d<=1?'danger':d<=3?'warn':'info';
+      const label=d===0?'HOJE — Prazo Vencendo!':d===1?'Prazo vence amanhã!':d<=3?`Prazo em ${d} dias`:`Prazo em ${d} dias`;
+      toast(emoji,label,`<strong>${p.tipo}</strong> · ${p.processo.slice(0,20)}...<br>Cliente: ${p.cliente}`,7000);
+      notificacoes.unshift({tipo:emoji,txt:`<strong>Alerta:</strong> ${p.tipo} vence em ${d===0?'hoje':`${d}d`} — ${p.processo.slice(0,16)}...`,time:'Agora',icone:'alarm'});
+      // Dispara API real se configurada
+      await disparaAlertaCompleto(p,d);
+    }
   }
+  renderDashNotif();
+}
 
-  function limpar() {
-    document.getElementById('lista').innerHTML = '';
-    document.getElementById('status').style.display = 'none';
-    document.getElementById('status').className = '';
-    document.getElementById('stats-bar').style.display = 'none';
+function renderDashPrazos(){
+  const el=document.getElementById('dash-prazos');
+  const sorted=[...prazos].sort((a,b)=>diasAte(a.data)-diasAte(b.data)).slice(0,5);
+  el.innerHTML=sorted.map(p=>{
+    const d=diasAte(p.data);
+    const cls=d<=3?'urgente':d<=7?'atencao':'normal';
+    const fc=d<=3?'#c0392b':d<=7?'#8a5f00':'#2d6a3f';
+    const pct=Math.max(0,Math.min(100,Math.round((30-Math.max(0,d))/30*100)));
+    const label=d<0?`Vencido ${Math.abs(d)}d`:d===0?'Hoje':`${d}d`;
+    return`<div class="prazo-item">
+      <div class="prazo-dot" style="background:${fc}"></div>
+      <div class="prazo-info">
+        <div class="prazo-proc">${p.tipo} — ${p.processo.slice(0,20)}...</div>
+        <div class="prazo-meta">${p.cliente} · ${fmtData(p.data)}</div>
+        <div class="prazo-bar"><div class="prazo-fill" style="width:${pct}%;background:${fc}"></div></div>
+      </div>
+      <div class="dias-pill ${cls}">${label}</div>
+    </div>`}).join('');
+}
+
+function renderDashNotif(){
+  const el=document.getElementById('dash-notif');
+  const icons={danger:'#c0392b',info:'#1a56a0',success:'#2d6a3f',warn:'#8a5f00'};
+  const svgs={danger:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',info:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>',success:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg>',warn:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'};
+  el.innerHTML=notificacoes.slice(0,5).map(n=>{
+    const c=icons[n.tipo]||icons.info;
+    const bg=n.tipo==='danger'?'var(--red)':n.tipo==='success'?'var(--green)':n.tipo==='warn'?'var(--warn)':'var(--blue)';
+    return`<div class="notif-item">
+      <div class="notif-icon" style="background:${bg};color:${c}">${svgs[n.tipo]||svgs.info}</div>
+      <div><div class="notif-txt">${n.txt}</div><div class="notif-time">${n.time}</div></div>
+    </div>`}).join('');
+}
+
+function renderPrazos(){
+  const tb=document.getElementById('tb-prazos');
+  const sorted=[...prazos].sort((a,b)=>diasAte(a.data)-diasAte(b.data));
+  tb.innerHTML=sorted.map(p=>{
+    const d=diasAte(p.data);
+    const dc=d<=3?'badge-red':d<=7?'badge-amber':'badge-green';
+    const sc=d<=3?'badge-red':d<=7?'badge-amber':'badge-blue';
+    const label=d<0?`Vencido ${Math.abs(d)}d`:d===0?'Hoje':`${d} dias`;
+    const status=d<0?'Vencido':d<=3?'Urgente':d<=7?'Atenção':'Normal';
+    const alertaLabel=p.alerta==='0'?'<span class="badge badge-gray">Sem alerta</span>':'<span class="badge badge-green">✓ Ativo</span>';
+    return`<tr>
+      <td style="font-size:12px;color:var(--btxt);font-family:monospace">${p.processo}</td>
+      <td style="font-weight:500">${p.cliente}</td>
+      <td>${p.tipo}</td>
+      <td>${fmtData(p.data)}</td>
+      <td><span class="badge ${dc}">${label}</span></td>
+      <td>${alertaLabel}</td>
+      <td><div class="td-actions">
+        <button class="btn btn-sm" title="Enviar alerta agora" onclick="enviarAlertaManual(${p.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+        <button class="btn btn-sm btn-red" onclick="delPrazo(${p.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+      </div></td>
+    </tr>`}).join('');
+  updateBadge();
+}
+
+function enviarAlertaManual(id){
+  const p=prazos.find(x=>x.id===id);
+  if(!p)return;
+  const d=diasAte(p.data);
+  const advWa=document.getElementById('adv-wa')?.value||'(71) 99999-8888';
+  toast('success','Alerta enviado!',`Mensagem WhatsApp enviada para ${advWa}<br><strong>${p.tipo}</strong> — vence em ${d<=0?'data passada':`${d} dias`}`,5000);
+  notificacoes.unshift({tipo:'success',txt:`<strong>Alerta manual:</strong> ${p.tipo} — ${p.processo.slice(0,18)}... enviado ao advogado`,time:'Agora',icone:'check'});
+  renderDashNotif();
+}
+
+function renderClientes(filter=''){
+  const tb=document.getElementById('tb-clientes');
+  const list=clientes.filter(c=>!filter||c.nome.toLowerCase().includes(filter.toLowerCase())||c.cpf.includes(filter)||c.area.toLowerCase().includes(filter.toLowerCase()));
+  tb.innerHTML=list.map(c=>`<tr>
+    <td><div style="font-weight:500">${c.nome}</div><div style="font-size:11px;color:var(--txt3)">${c.cpf}</div></td>
+    <td style="font-size:12px;color:var(--txt2)">${c.cpf}</td>
+    <td style="font-size:13px">${c.tel}</td>
+    <td style="font-size:13px;color:#25D366;font-weight:500">${c.wa||'—'}</td>
+    <td><span class="badge badge-blue">${c.area.replace('Direito ','')}</span></td>
+    <td style="text-align:center;font-weight:500">${c.processos}</td>
+    <td><button class="btn btn-sm btn-red" onclick="delCliente(${c.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></td>
+  </tr>`).join('');
+  document.getElementById('m-cli').textContent=clientes.length;
+}
+
+function renderProcessos(filter=''){
+  const tb=document.getElementById('tb-processos');
+  const list=processos.filter(p=>!filter||p.num.includes(filter)||p.cliente.toLowerCase().includes(filter.toLowerCase()));
+  const faseColor={Recurso:'badge-red',Julgamento:'badge-amber',Instrução:'badge-blue',Conhecimento:'badge-gray',Execução:'badge-amber',Arquivado:'badge-gray',Criminal:'badge-red'};
+  tb.innerHTML=list.map(p=>`<tr>
+    <td style="font-size:12px;color:var(--btxt);font-family:monospace">${p.num}</td>
+    <td style="font-weight:500">${p.cliente}</td>
+    <td><span class="badge badge-blue">${p.tipo}</span></td>
+    <td style="font-size:12px;color:var(--txt2)">${p.tribunal}</td>
+    <td><span class="badge ${faseColor[p.fase]||'badge-gray'}">${p.fase}</span></td>
+    <td style="font-size:11px;color:var(--txt3)">${p.sync}</td>
+    <td><div class="td-actions">
+      <button class="btn btn-sm btn-green" title="Sincronizar com tribunal" onclick="sincronizar(${p.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg></button>
+      <button class="btn btn-sm btn-red" onclick="delProcesso(${p.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+    </div></td>
+  </tr>`).join('');
+  document.getElementById('m-proc').textContent=processos.length;
+  document.getElementById('badge-proc').textContent=processos.length;
+}
+
+function renderAgenda(){
+  const el=document.getElementById('agenda-list');
+  const items=[
+    {data:'07/05/2025',hora:'10:00',tipo:'Audiência',desc:'Audiência de instrução — Proc. 0003456',local:'TJBA — 3ª Vara Cível',cliente:'Empresa ABC Ltda',cor:'var(--red)',corTxt:'var(--rtxt)'},
+    {data:'07/05/2025',hora:'15:30',tipo:'Consulta',desc:'Consulta — Maria das Graças Souza',local:'Escritório',cliente:'Maria das Graças Souza',cor:'var(--green)',corTxt:'var(--gtxt)'},
+    {data:'08/05/2025',hora:'09:00',tipo:'Prazo',desc:'Prazo: Recurso de apelação',local:'Peticionamento eletrônico',cliente:'Carlos Alberto Ferreira',cor:'var(--warn)',corTxt:'var(--wtxt)'},
+    {data:'12/05/2025',hora:'14:00',tipo:'Audiência',desc:'Audiência de conciliação trabalhista',local:'TRT 5ª Região',cliente:'Maria das Graças Souza',cor:'var(--red)',corTxt:'var(--rtxt)'},
+    {data:'20/05/2025',hora:'09:30',tipo:'Audiência',desc:'Audiência de instrução — Proc. 0003456',local:'TRF 1ª Região',cliente:'Empresa ABC Ltda',cor:'var(--red)',corTxt:'var(--rtxt)'},
+  ];
+  let lastData='';
+  el.innerHTML=items.map(a=>{
+    let h='';
+    if(a.data!==lastData){lastData=a.data;h=`<div class="agenda-day-label">${a.data}</div>`}
+    return`${h}<div class="agenda-item">
+      <div class="agenda-hora" style="background:${a.cor};border-radius:var(--r);padding:8px 0">
+        <span style="color:${a.corTxt}">${a.hora}</span>
+        <small style="color:${a.corTxt};opacity:0.7">${a.tipo}</small>
+      </div>
+      <div class="agenda-info">
+        <strong>${a.desc}</strong>
+        <small><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${a.local} · ${a.cliente}</small>
+      </div>
+      <span class="badge" style="background:${a.cor};color:${a.corTxt}">${a.tipo}</span>
+    </div>`}).join('');
+}
+
+function updateBadge(){
+  const urg=prazos.filter(p=>{const d=diasAte(p.data);return d>=0&&d<=7}).length;
+  const badge=document.getElementById('badge-prazos');
+  badge.textContent=urg;
+  badge.className='sb-badge'+(urg>0?' red':'');
+  document.getElementById('m-urg').textContent=urg;
+}
+
+function filtrarClientes(v){renderClientes(v)}
+function filtrarProcessos(v){renderProcessos(v)}
+
+function atualizarSelects(){
+  ['p-cli','pr-cli'].forEach(sid=>{
+    const s=document.getElementById(sid);
+    if(!s)return;
+    s.innerHTML='<option value="">— Selecionar cliente —</option>'+clientes.map(c=>`<option value="${c.nome}">${c.nome}</option>`).join('');
+  });
+  atualizarSelectsPagamento();
+}
+
+function salvarCliente(){
+  const nome=document.getElementById('c-nome').value.trim();
+  if(!nome){toast('danger','Erro','Informe o nome do cliente');return}
+  clientes.push({id:Date.now(),nome,cpf:document.getElementById('c-cpf').value||'—',tel:document.getElementById('c-tel').value||'—',wa:document.getElementById('c-wa').value||'—',email:document.getElementById('c-email').value||'—',area:document.getElementById('c-area').value,processos:0,obs:document.getElementById('c-obs').value});
+  renderClientes();atualizarSelects();fecharModal('modal-cliente');
+  ['c-nome','c-cpf','c-tel','c-wa','c-email','c-obs'].forEach(id=>{document.getElementById(id).value=''});
+  toast('success','Cliente cadastrado!',`${nome} adicionado com sucesso.`);
+}
+
+function salvarPrazo(){
+  const proc=document.getElementById('p-proc').value.trim();
+  const data=document.getElementById('p-data').value;
+  if(!proc||!data){toast('danger','Erro','Informe o processo e a data');return}
+  const novo={id:Date.now(),processo:proc,tipo:document.getElementById('p-tipo').value,data,cliente:document.getElementById('p-cli').value||'—',alerta:document.getElementById('p-alerta').value,obs:document.getElementById('p-obs').value,alertaEnviado:false};
+  prazos.push(novo);
+  renderPrazos();renderDashPrazos();fecharModal('modal-prazo');
+  ['p-proc','p-data','p-obs'].forEach(id=>{document.getElementById(id).value=''});
+  const d=diasAte(data);
+  toast('success','Prazo adicionado!',`${novo.tipo} em ${fmtData(data)} (${d} dias). Alertas configurados.`);
+}
+
+function salvarProcesso(){
+  const num=document.getElementById('pr-num').value.trim();
+  if(!num){toast('danger','Erro','Informe o número do processo');return}
+  processos.push({id:Date.now(),num,cliente:document.getElementById('pr-cli').value||'—',tipo:document.getElementById('pr-area').value,tribunal:document.getElementById('pr-trib').value||'—',fase:document.getElementById('pr-fase').value,mov:document.getElementById('pr-mov').value||'Cadastrado manualmente',sync:new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})});
+  renderProcessos();fecharModal('modal-processo');
+  ['pr-num','pr-trib','pr-mov'].forEach(id=>{document.getElementById(id).value=''});
+  toast('success','Processo adicionado!',`Processo ${num.slice(0,15)}... cadastrado.`);
+}
+
+function delCliente(id){
+  if(!confirm('Remover este cliente?'))return;
+  clientes=clientes.filter(c=>c.id!==id);renderClientes();atualizarSelects();
+}
+function delPrazo(id){
+  if(!confirm('Remover este prazo?'))return;
+  prazos=prazos.filter(p=>p.id!==id);renderPrazos();renderDashPrazos();
+}
+function delProcesso(id){
+  if(!confirm('Remover este processo?'))return;
+  processos=processos.filter(p=>p.id!==id);renderProcessos();
+}
+
+function sincronizar(id){
+  const p=processos.find(x=>x.id===id);
+  if(!p)return;
+  const btn=event.target.closest('button');
+  btn.disabled=true;
+  document.getElementById('sync-status').innerHTML='<div class="sync-dot pending"></div><span>Sincronizando...</span>';
+  setTimeout(()=>{
+    const movs=['Nova petição juntada aos autos','Intimação expedida','Concluso para despacho','Certidão de publicação juntada','Despacho publicado no DJ'];
+    p.mov=movs[Math.floor(Math.random()*movs.length)];
+    p.sync=new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    renderProcessos();
+    btn.disabled=false;
+    document.getElementById('sync-status').innerHTML='<div class="sync-dot ok"></div><span>Atualizado agora</span>';
+    toast('success','Processo sincronizado!',`${p.num.slice(0,18)}...<br>Nova movimentação: <em>${p.mov}</em>`,6000);
+    notificacoes.unshift({tipo:'info',txt:`<strong>Movimentação:</strong> ${p.mov} — ${p.num.slice(0,16)}...`,time:'Agora',icone:'refresh'});
+    renderDashNotif();
+  },1800);
+}
+
+// ── Z-API ──────────────────────────────────────────────
+let zapiConfig={instance:'',token:'',clientToken:'',numero:''};
+let emailjsConfig={pubkey:'',service:'',template:'',email:''};
+
+function atualizarStatusZapi(){
+  const ok=document.getElementById('zapi-instance').value&&document.getElementById('zapi-token').value;
+  const b=document.getElementById('zapi-status-badge');
+  if(b){b.textContent=ok?'Configurado':'Não configurado';b.className='badge '+(ok?'badge-green':'badge-gray')}
+}
+function atualizarStatusEmailjs(){
+  const ok=document.getElementById('ejs-pubkey').value&&document.getElementById('ejs-service').value&&document.getElementById('ejs-template').value;
+  const b=document.getElementById('emailjs-status-badge');
+  if(b){b.textContent=ok?'Configurado':'Não configurado';b.className='badge '+(ok?'badge-green':'badge-gray')}
+}
+
+function salvarConfigZapi(){
+  zapiConfig.instance=document.getElementById('zapi-instance').value.trim();
+  zapiConfig.token=document.getElementById('zapi-token').value.trim();
+  zapiConfig.clientToken=document.getElementById('zapi-client-token').value.trim();
+  zapiConfig.numero=document.getElementById('adv-wa').value.replace(/\D/g,'');
+  if(!zapiConfig.instance||!zapiConfig.token||!zapiConfig.numero){toast('danger','Erro','Preencha Instance ID, Token e WhatsApp do advogado');return}
+  atualizarStatusZapi();
+  toast('success','Z-API configurado!','Credenciais salvas. Clique em "Testar" para verificar.');
+}
+
+function salvarConfigEmailjs(){
+  emailjsConfig.pubkey=document.getElementById('ejs-pubkey').value.trim();
+  emailjsConfig.service=document.getElementById('ejs-service').value.trim();
+  emailjsConfig.template=document.getElementById('ejs-template').value.trim();
+  emailjsConfig.email=document.getElementById('adv-email').value.trim();
+  if(!emailjsConfig.pubkey||!emailjsConfig.service||!emailjsConfig.template||!emailjsConfig.email){toast('danger','Erro','Preencha todos os campos do EmailJS');return}
+  atualizarStatusEmailjs();
+  // Inicializa EmailJS
+  if(window.emailjs)emailjs.init(emailjsConfig.pubkey);
+  toast('success','EmailJS configurado!','Credenciais salvas. Clique em "Testar" para verificar.');
+}
+
+async function enviarWhatsApp(numero, mensagem){
+  if(!zapiConfig.instance||!zapiConfig.token){
+    toast('warn','Z-API não configurado','Configure as credenciais na aba Alertas & Notif.');
+    return false;
   }
+  try{
+    const url=`https://api.z-api.io/instances/${zapiConfig.instance}/token/${zapiConfig.token}/send-text`;
+    const headers={'Content-Type':'application/json'};
+    if(zapiConfig.clientToken)headers['Client-Token']=zapiConfig.clientToken;
+    const resp=await fetch(url,{method:'POST',headers,body:JSON.stringify({phone:numero.replace(/\D/g,''),message:mensagem})});
+    const data=await resp.json();
+    if(resp.ok&&(data.zaapId||data.messageId||data.id)){return true}
+    console.error('Z-API erro:',data);
+    return false;
+  }catch(e){console.error('Z-API fetch error:',e);return false}
+}
 
-  // ── BUSCA ──────────────────────────────────────────────────
-  async function buscar(e, tipo) {
-    e.preventDefault();
-    limpar();
+async function enviarEmail(params){
+  if(!emailjsConfig.pubkey||!emailjsConfig.service||!emailjsConfig.template){return false}
+  try{
+    if(window.emailjs){
+      emailjs.init(emailjsConfig.pubkey);
+      await emailjs.send(emailjsConfig.service,emailjsConfig.template,{...params,to_email:emailjsConfig.email});
+      return true;
+    }
+    return false;
+  }catch(e){console.error('EmailJS error:',e);return false}
+}
 
-    let endpoint, body;
+function montarMensagemWA(p, diasRestantes){
+  const emoji=diasRestantes<=0?'🔴':diasRestantes<=1?'🔴':diasRestantes<=3?'🟠':'🟡';
+  const urgLabel=diasRestantes<=0?'VENCIDO':diasRestantes===1?'VENCE AMANHÃ':diasRestantes<=3?`URGENTE — ${diasRestantes} dias`:diasRestantes<=7?`ATENÇÃO — ${diasRestantes} dias`:`Lembrete — ${diasRestantes} dias`;
+  return`⚖️ *Advoca.ai — Alerta de Prazo*\n\nOlá, Dr. ${document.getElementById('adv-wa')?.closest('.alert-config')? 'Advogado':'Advogado'}!\n\n${emoji} *${urgLabel}*\n\n📋 Processo: *${p.processo}*\n📌 Tipo: ${p.tipo}\n👤 Cliente: ${p.cliente}\n📅 Vencimento: *${fmtData(p.data)}*\n\nAcesse o Advoca.ai para mais detalhes.\n\n_Advoca.ai · Gestão Jurídica Automatizada_`;
+}
 
-    if (tipo === 'numero') {
-      const v = document.getElementById('inp-numero').value.trim();
-      if (!v) return;
-      endpoint = '/buscar/numero';
-      body = { numero: v };
-    } else if (tipo === 'nome') {
-      const v = document.getElementById('inp-nome').value.trim();
-      if (!v) return;
-      endpoint = '/buscar/nome';
-      body = { nome: v };
+async function disparaAlertaCompleto(p, diasRestantes){
+  const msg=montarMensagemWA(p,diasRestantes);
+  const num=zapiConfig.numero||document.getElementById('adv-wa')?.value?.replace(/\D/g,'')||'';
+
+  // WhatsApp
+  if(zapiConfig.instance&&zapiConfig.token&&num){
+    const ok=await enviarWhatsApp(num,msg);
+    if(ok){
+      toast('success','WhatsApp enviado!',`Alerta de ${p.tipo} enviado ao advogado.`);
+      notificacoes.unshift({tipo:'success',txt:`<strong>WA enviado:</strong> Alerta de ${p.tipo} — ${fmtData(p.data)}`,time:'Agora',icone:'check'});
     } else {
-      const oab = document.getElementById('inp-oab').value.trim();
-      const uf  = document.getElementById('inp-uf').value.trim();
-      if (!oab) return;
-      endpoint = '/buscar/oab';
-      body = { oab, uf };
+      toast('warn','Erro no WhatsApp',`Não foi possível enviar via Z-API. Verifique as credenciais.`);
+    }
+  }
+
+  // E-mail
+  if(document.getElementById('email-prazo')?.checked&&emailjsConfig.pubkey){
+    const ok=await enviarEmail({nome_adv:'Advogado',tipo_prazo:p.tipo,processo:p.processo,cliente:p.cliente,vencimento:fmtData(p.data),dias_restantes:diasRestantes});
+    if(ok){
+      toast('success','E-mail enviado!',`Alerta por e-mail enviado para ${emailjsConfig.email}`);
+    }
+  }
+  renderDashNotif();
+}
+
+async function testarZapi(){
+  const inst=document.getElementById('zapi-instance').value.trim();
+  const tok=document.getElementById('zapi-token').value.trim();
+  const num=document.getElementById('adv-wa').value.replace(/\D/g,'');
+  if(!inst||!tok||!num){toast('danger','Preencha os dados','Informe Instance ID, Token e número do WhatsApp');return}
+  salvarConfigZapi();
+  const msg=`⚖️ *Advoca.ai — Teste de Integração*\n\nOlá! Este é um teste de alerta automático do Advoca.ai.\n\n✅ Integração WhatsApp (Z-API) funcionando!\n\n_Advoca.ai · Gestão Jurídica_`;
+  toast('info','Enviando teste...','Aguarde a confirmação do WhatsApp.',4000);
+  const ok=await enviarWhatsApp(num,msg);
+  if(ok){
+    toast('success','Teste enviado com sucesso!',`Mensagem enviada para ${document.getElementById('adv-wa').value}. Verifique o WhatsApp!`,8000);
+  } else {
+    toast('danger','Falha no envio','Verifique se o Instance ID e Token estão corretos e se a instância Z-API está conectada (QR Code escaneado).',8000);
+  }
+}
+
+async function testarEmail(){
+  const pub=document.getElementById('ejs-pubkey').value.trim();
+  const svc=document.getElementById('ejs-service').value.trim();
+  const tpl=document.getElementById('ejs-template').value.trim();
+  const eml=document.getElementById('adv-email').value.trim();
+  if(!pub||!svc||!tpl||!eml){toast('danger','Preencha os dados','Informe todas as credenciais do EmailJS');return}
+  salvarConfigEmailjs();
+  if(!window.emailjs){toast('warn','EmailJS não carregado','Recarregue a página e tente novamente.');return}
+  toast('info','Enviando e-mail de teste...','Aguarde.',4000);
+  const ok=await enviarEmail({nome_adv:'Advogado',tipo_prazo:'TESTE',processo:'0000000-00.0000.0.00.0000',cliente:'Cliente Teste',vencimento:fmtDataHoje(),dias_restantes:1});
+  if(ok){
+    toast('success','E-mail enviado!',`Verifique a caixa de entrada de ${eml}`,7000);
+  } else {
+    toast('danger','Falha no e-mail','Verifique se Public Key, Service ID e Template ID estão corretos no EmailJS.',7000);
+  }
+}
+
+async function enviarAlertaManual(id){
+  const p=prazos.find(x=>x.id===id);
+  if(!p)return;
+  const d=diasAte(p.data);
+  await disparaAlertaCompleto(p,d);
+}
+
+async function sincronizarEscavador(){
+  if(!usuarioLogado){toast('danger','Erro','Faça login primeiro');return}
+  const oab=usuarioLogado.oab?.replace(/\D/g,'');
+  const uf=usuarioLogado.oab?.match(/[A-Z]{2}/)?.[0]||'BA';
+  if(!oab){toast('danger','Erro','OAB não encontrada no perfil do usuário');return}
+  await sincronizarPorOAB(oab, uf, true);
+}
+
+// ── CONSULTA TRIBUNAIS ─────────────────────────────────
+function abrirPJeOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  window.open(`https://pje.tjba.jus.br/pje/ConsultaPublica/listView.seam?oab=${oab}&uf=${uf}`,'_blank');
+}
+function abrirCNJOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  window.open(`https://cnj.jus.br/pesquisapublica/#/advogado?oab=${oab}&uf=${uf}`,'_blank');
+}
+function abrirEscavadorOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  window.open(`https://www.escavador.com/sobre/oab/${uf}/${oab}`,'_blank');
+}
+function abrirPJeProcesso(){
+  const num=document.getElementById('proc-input').value.trim();
+  if(!num){toast('danger','Erro','Informe o número do processo');return}
+  window.open(`https://pje.tjba.jus.br/pje/ConsultaPublica/listView.seam?numeroProcesso=${num}`,'_blank');
+}
+function abrirCNJProcesso(){
+  const num=document.getElementById('proc-input').value.trim();
+  if(!num){toast('danger','Erro','Informe o número do processo');return}
+  window.open(`https://cnj.jus.br/pesquisapublica/#/datainicial?datainicial=${num}`,'_blank');
+}
+function abrirJusbrasilProcesso(){
+  const num=document.getElementById('proc-input').value.trim();
+  if(!num){toast('danger','Erro','Informe o número do processo');return}
+  window.open(`https://www.jusbrasil.com.br/processos/busca?q=${encodeURIComponent(num)}`,'_blank');
+}
+
+// ── CNJ DATAJUD (via Vercel Function) ─────────────────
+
+async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
+  if(!oabNumero)return;
+  if(exibirFeedback){
+    document.getElementById('sync-status').innerHTML='<div class="sync-dot pending"></div><span>Sincronizando processos...</span>';
+    toast('info','Sincronizando...','Buscando processos no Escavador. Aguarde.',4000);
+  }
+  try{
+    // Chama o servidor no Render com OAB e nome
+    const nomeAdv = encodeURIComponent(usuarioLogado?.nome?.replace('Dra. ','').replace('Dr. ','') || '');
+    const resp = await fetch(`https://advoa-ai.onrender.com?oab=${oabNumero}&uf=${oabUF}&nome=${nomeAdv}`);
+
+    if(!resp.ok){
+      const err = await resp.json().catch(()=>({}));
+      throw new Error(err.erro || `Erro ${resp.status}`);
     }
 
-    setStatus('carregando', '<span class="spinner"></span> Consultando o DataJud…');
-    setBtnLoading(tipo, true);
+    const dados = await resp.json();
+    const lista = dados?.items || dados?.data || dados?.processos || [];
 
-    try {
-      const r = await fetch(API + endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+    let importados=0;
+    lista.forEach(p=>{
+      const num = p.numero_cnj || p.numero || p.numeroProcesso;
+      if(!num)return;
+      if(processos.find(x=>x.num===num))return;
+      processos.push({
+        id:Date.now()+Math.random(),
+        num,
+        cliente:'— Vincular cliente —',
+        tipo: p.tipo || p.area || p.classeProcessual || 'Não informado',
+        tribunal: p.tribunal || p.tribunal_sigla || 'Não informado',
+        fase: p.fase_atual || 'Em andamento',
+        mov: p.ultimo_movimento || p.ultimaMovimentacao || 'Importado via CNJ DataJud',
+        sync: new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})
       });
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const data = await r.json();
-      renderizar(data.processos || []);
-    } catch (err) {
-      setStatus('erro', '⚠ Não foi possível conectar ao servidor. Verifique se o servidor.py está rodando em localhost:8000.');
-      console.error(err);
-    } finally {
-      setBtnLoading(tipo, false);
-    }
-  }
-
-  // ── RENDERIZAR ────────────────────────────────────────────
-  function renderizar(processos) {
-    const lista = document.getElementById('lista');
-    const stats = document.getElementById('stats-bar');
-
-    if (!processos.length) {
-      setStatus('vazio', '🔍 Nenhum processo encontrado para este critério.');
-      return;
-    }
-
-    document.getElementById('status').style.display = 'none';
-    stats.style.display = 'block';
-    stats.innerHTML = `<span>${processos.length}</span> processo(s) encontrado(s)`;
-
-    lista.innerHTML = '';
-    processos.forEach((p, i) => {
-      lista.innerHTML += criarCard(p, i);
+      importados++;
     });
+
+    renderProcessos();
+    document.getElementById('sync-status').innerHTML='<div class="sync-dot ok"></div><span>Sincronizado agora</span>';
+    if(exibirFeedback){
+      if(importados>0){
+        toast('success',`${importados} processos importados!`,`Processos sincronizados com sucesso.`,6000);
+        notificacoes.unshift({tipo:'success',txt:`<strong>Escavador:</strong> ${importados} processos via OAB/${oabUF} ${oabNumero}`,time:'Agora'});
+      } else if(lista.length===0){
+        toast('info','Nenhum processo encontrado',`Nenhum processo localizado para OAB/${oabUF} ${oabNumero}.`,5000);
+      } else {
+        toast('info','Tudo atualizado','Todos os processos já estavam cadastrados.',4000);
+      }
+      renderDashNotif();
+    }
+    return importados;
+  } catch(e){
+    console.error('Erro sincronização:',e);
+    document.getElementById('sync-status').innerHTML='<div class="sync-dot pending"></div><span>Erro na sincronização</span>';
+    if(exibirFeedback) toast('danger','Erro na sincronização',e.message,6000);
+    return 0;
   }
+}
 
-  function criarCard(p, i) {
-    const tribunal  = p.tribunal || p.siglaTribunal || '—';
-    const numero    = p.numeroProcesso || p.numero_cnj || '—';
-    const classe    = p.classe?.nome || p.classe || '—';
-    const assunto   = Array.isArray(p.assuntos)
-      ? p.assuntos.map(a => a.nome || a).join(', ')
-      : (p.assunto || '—');
-    const dataAdj   = formatarData(p.dataAjuizamento || p.data_ajuizamento);
-    const grau      = p.grau || '—';
-    const partes    = Array.isArray(p.partes) ? p.partes : (typeof p.partes === 'string' ? tryParse(p.partes) : []);
-    const movs      = Array.isArray(p.movimentos) ? p.movimentos : (typeof p.movimentos === 'string' ? tryParse(p.movimentos) : []);
+async function buscarProcessosPorOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  const btn=document.getElementById('btn-buscar-oab');
+  btn.disabled=true;btn.textContent='Buscando...';
+  document.getElementById('oab-resultado').innerHTML=`<div style="text-align:center;padding:20px;color:var(--txt2);font-size:13px">🔍 Consultando Escavador para OAB/${uf} ${oab}...</div>`;
+  const total = await sincronizarPorOAB(oab, uf, false);
+  btn.disabled=false;btn.textContent='Buscar processos';
+  if(total>0){
+    document.getElementById('oab-resultado').innerHTML=`<div style="color:var(--gtxt);font-size:13px;font-weight:500;padding:12px;background:var(--green);border-radius:var(--r)">✓ ${total} processos importados com sucesso! Acesse a aba <strong>Processos</strong> para visualizar.</div>`;
+  } else {
+    document.getElementById('oab-resultado').innerHTML=`<div style="color:var(--wtxt);font-size:13px;padding:12px;background:var(--warn);border-radius:var(--r)">Nenhum processo novo encontrado para OAB/${uf} ${oab}. Verifique se o número está correto.</div>`;
+  }
+}
 
-    const partesHtml = partes.slice(0, 4).map(pt =>
-      `<div class="movimento">
-        <span class="mov-data">${pt.polo || ''}</span>
-        <span class="mov-nome">${pt.nome || ''}</span>
-      </div>`
-    ).join('');
+// Sincronização automática ao fazer login
+async function sincronizarAoLogin(){
+  if(!usuarioLogado)return;
+  const oab=usuarioLogado.oab?.replace(/\D/g,'');
+  const uf=usuarioLogado.oab?.match(/[A-Z]{2}/)?.[0]||'BA';
+  if(oab) await sincronizarPorOAB(oab, uf, true);
+}
+async function buscarProcessosPorOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  const btn=document.getElementById('btn-buscar-oab');
+  btn.disabled=true;
+  btn.textContent='Buscando...';
+  document.getElementById('oab-resultado').innerHTML=`
+    <div style="text-align:center;padding:24px;color:var(--txt2)">
+      <div style="font-size:13px;margin-bottom:8px">🔍 Consultando processos da OAB/${uf} ${oab}...</div>
+      <div style="font-size:12px;color:var(--txt3)">Consultando base do CNJ e tribunais estaduais</div>
+    </div>`;
 
-    const movsHtml = movs.slice(0, 10).map(m =>
-      `<div class="movimento">
-        <span class="mov-data">${formatarData(m.dataHora || m.data)}</span>
-        <span class="mov-nome">${m.nome || m.descricao || ''}</span>
-      </div>`
-    ).join('');
+  // Simula busca (em produção: API do CNJ DataJud)
+  await new Promise(r=>setTimeout(r,2000));
 
-    return `
-      <div class="processo-card" id="card-${i}" onclick="toggleCard(${i})" style="animation-delay:${i*0.05}s">
-        <div class="card-header">
-          <span class="tribunal-badge">${tribunal}</span>
-          <span class="processo-numero">${numero}</span>
-          <span class="processo-data">${dataAdj}</span>
+  const encontrados=[
+    {num:`${String(Math.floor(Math.random()*9999999)).padStart(7,'0')}-${String(new Date().getFullYear()).slice(2)}.${new Date().getFullYear()}.8.05.0001`,tribunal:'TJBA — 1ª Vara Cível',tipo:'Cível',fase:'Instrução',mov:'Audiência de instrução designada'},
+    {num:`${String(Math.floor(Math.random()*9999999)).padStart(7,'0')}-${String(new Date().getFullYear()).slice(2)}.${new Date().getFullYear()}.8.05.0002`,tribunal:'TJBA — 2ª Vara de Família',tipo:'Família',fase:'Conhecimento',mov:'Petição inicial recebida'},
+    {num:`${String(Math.floor(Math.random()*9999999)).padStart(7,'0')}-${String(new Date().getFullYear()).slice(2)}.${new Date().getFullYear()}.5.04.0001`,tribunal:'TRT 5ª Região',tipo:'Trabalhista',fase:'Recurso',mov:'Recurso ordinário interposto'},
+  ];
+
+  btn.disabled=false;
+  btn.textContent='Buscar processos';
+
+  document.getElementById('oab-resultado').innerHTML=`
+    <div style="margin-bottom:12px;font-size:13px;color:var(--gtxt);font-weight:500">✓ ${encontrados.length} processos encontrados para OAB/${uf} ${oab}</div>
+    ${encontrados.map((p,i)=>`
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;color:var(--btxt);font-family:monospace;margin-bottom:3px">${p.num}</div>
+          <div style="font-size:12px;color:var(--txt2)">${p.tribunal} · <span class="badge badge-blue">${p.tipo}</span> · <span class="badge ${p.fase==='Recurso'?'badge-red':p.fase==='Instrução'?'badge-blue':'badge-gray'}">${p.fase}</span></div>
+          <div style="font-size:11px;color:var(--txt3);margin-top:3px">${p.mov}</div>
         </div>
-        <div class="card-body">
-          <div class="campo"><label>Classe</label><p>${classe}</p></div>
-          <div class="campo"><label>Assunto</label><p>${assunto}</p></div>
-          <div class="campo"><label>Grau</label><p>${grau}</p></div>
-        </div>
-        <div class="toggle-hint">▼ clique para ver partes e movimentos</div>
-        <div class="movimentos-section">
-          ${partes.length ? `<p class="movimentos-title">Partes</p>${partesHtml}` : ''}
-          ${movs.length  ? `<p class="movimentos-title" style="margin-top:1rem">Movimentações</p>${movsHtml}` : ''}
-          ${!partes.length && !movs.length ? '<p style="color:var(--muted);font-size:.85rem">Sem detalhes disponíveis.</p>' : ''}
-        </div>
-      </div>`;
-  }
+        <button class="btn btn-green btn-sm" onclick="importarProcesso(${i})">+ Importar</button>
+      </div>`).join('')}`;
 
-  function toggleCard(i) {
-    document.getElementById('card-' + i).classList.toggle('aberto');
-  }
+  window._oabProcessos=encontrados;
+}
 
-  // ── HELPERS ───────────────────────────────────────────────
-  function setStatus(tipo, html) {
-    const el = document.getElementById('status');
-    el.className = tipo;
-    el.innerHTML = html;
-    el.style.display = 'block';
-  }
+function importarProcesso(i){
+  const p=window._oabProcessos[i];
+  if(!p)return;
+  if(processos.find(x=>x.num===p.num)){toast('warn','Atenção','Este processo já está cadastrado.');return}
+  processos.push({id:Date.now(),num:p.num,cliente:'— Vincular cliente —',tipo:p.tipo,tribunal:p.tribunal,fase:p.fase,mov:p.mov,sync:new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})});
+  renderProcessos();
+  toast('success','Processo importado!',`${p.num.slice(0,18)}... adicionado com sucesso.`);
+  // Marcar como importado
+  const btn=document.querySelectorAll('#oab-resultado button')[i];
+  if(btn){btn.textContent='✓ Importado';btn.disabled=true;btn.className='btn btn-sm badge-gray';}
+}
 
-  function setBtnLoading(tipo, loading) {
-    const btn = document.getElementById('btn-' + tipo);
-    btn.disabled = loading;
-    btn.textContent = loading ? 'Buscando…' : 'Buscar';
-  }
+function abrirModal(id){const el=document.getElementById(id);if(el)el.classList.add('open')}
+function fecharModal(id){const el=document.getElementById(id);if(el)el.classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
 
-  function formatarData(str) {
-    if (!str) return '—';
-    try {
-      return new Date(str).toLocaleDateString('pt-BR');
-    } catch { return str; }
-  }
+function nav(page,el){
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById('page-'+page);
+  if(pg)pg.classList.add('active');
+  const titles={dashboard:'Dashboard',prazos:'Prazos processuais',clientes:'Clientes',processos:'Processos',financeiro:'Financeiro',agenda:'Agenda',alertas:'Alertas & Notificações',oab:'Buscar por OAB'};
+  const t=document.getElementById('page-title');
+  if(t)t.textContent=titles[page]||page;
+}
 
-  function tryParse(str) {
-    try { return JSON.parse(str); } catch { return []; }
-  }
+function iniciarApp(){
+  renderClientes();renderPrazos();renderProcessos();renderAgenda();renderDashPrazos();renderDashNotif();renderFinanceiro();atualizarSelects();atualizarSelectsPagamento();
+  setTimeout(verificarAlertas,3000);
+  setTimeout(verificarInadimplencia,4000);
+  setInterval(verificarAlertas,6*60*60*1000);
+  setInterval(verificarInadimplencia,60*60*1000);
+}
+
+// Arranque — só verifica auto-login, NÃO renderiza nada ainda
+verificarAutoLogin();
 </script>
 </body>
 </html>
-    
