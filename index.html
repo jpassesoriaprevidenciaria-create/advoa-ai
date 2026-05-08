@@ -3,594 +3,210 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portal Jurídico</title>
+  <title>Consulta de Processos Judiciais</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg:       #f5f2ee;
-      --surface:  #ffffff;
-
-      --dark:     #1a1612;
-      --gold:     #b8952a;
-      --gold2:    #d4af5a;
-      --muted:    #8a8278;
-      --border:   #e2ddd7;
-      --danger:   #c0392b;
-      --radius:   14px;
-      --font-h:   'Cormorant Garamond', Georgia, serif;
-      --font-b:   'Outfit', sans-serif;
+      --bg:        #0d0f14;
+      --surface:   #13161e;
+      --surface2:  #1a1e29;
+      --border:    #252a38;
+      --accent:    #c8a96e;
+      --accent2:   #e8c98a;
+      --text:      #e8e4dc;
+      --muted:     #6b7280;
+      --danger:    #e05c5c;
+      --success:   #5caa82;
+      --radius:    12px;
+      --font-head: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--dark);
-      font-family: var(--font-b);
-      font-weight: 300;
-      min-height: 100vh;
-    }
-
-    /* ── TELA DE LOGIN ─────────────────────────────── */
-    #tela-login {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      background: var(--bg);
-      position: relative;
-      overflow: hidden;
-    }
-    #tela-login::before {
-      content: '⚖';
-      position: absolute;
-      font-size: 40rem;
-      opacity: 0.04;
-      bottom: -8rem;
-      right: -6rem;
-      line-height: 1;
-      pointer-events: none;
-    }
-
-    .login-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 3rem 2.5rem;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-      animation: fadeUp 0.5s ease both;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .login-logo {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .login-logo .icone {
-      font-size: 2.5rem;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-    .login-logo h1 {
-      font-family: var(--font-h);
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--dark);
-      line-height: 1.1;
-    }
-    .login-logo p {
-      font-size: 0.8rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-top: 0.25rem;
-    }
-
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 1.5rem 0;
-    }
-
-    .campo-login {
-      margin-bottom: 1.25rem;
-    }
-    .campo-login label {
-      display: block;
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-    .campo-login input, .campo-login select {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--dark);
-      font-family: var(--font-b);
-      font-size: 0.95rem;
-      padding: 0.8rem 1rem;
-      border-radius: 8px;
-      outline: none;
-      transition: border-color 0.2s;
-      appearance: none;
-    }
-    .campo-login input:focus,
-    .campo-login select:focus { border-color: var(--gold); }
-
-    .btn-login {
-      width: 100%;
-      background: var(--dark);
-      color: #fff;
-      border: none;
-      font-family: var(--font-b);
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      padding: 0.9rem;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 0.5rem;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .btn-login:hover { background: var(--gold); }
-    .btn-login:active { transform: scale(0.98); }
-
-    .erro-login {
-      background: rgba(192,57,43,0.08);
-      color: var(--danger);
-      border: 1px solid rgba(192,57,43,0.2);
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-size: 0.85rem;
-      margin-top: 1rem;
-      display: none;
-      text-align: center;
-    }
-
-    /* ── PORTAL PRINCIPAL ──────────────────────────── */
-    #tela-portal { display: none; }
-
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .header-left { display: flex; align-items: center; gap: 1rem; }
-    .header-logo {
-      font-family: var(--font-h);
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--dark);
-    }
-    .header-user {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-    .header-user strong {
-      display: block;
-      font-size: 0.9rem;
-      color: var(--dark);
-      font-weight: 500;
-    }
-    .avatar {
-      width: 38px; height: 38px;
-      background: var(--dark);
-      color: #fff;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-h);
-      font-size: 1rem;
-      font-weight: 700;
-    }
-    .btn-sair {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: var(--font-b);
-      font-size: 0.8rem;
-      padding: 0.4rem 0.9rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-sair:hover { border-color: var(--danger); color: var(--danger); }
-
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem 5rem;
-    }
-
-    .boas-vindas {
-      margin-bottom: 2rem;
-    }
-    .boas-vindas h2 {
-      font-family: var(--font-h);
-      font-size: 2rem;
-      font-weight: 600;
-      color: var(--dark);
-    }
-    .boas-vindas p {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
-    }
-
-    /* BUSCA */
-    .search-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-    .search-card input {
-      flex: 1;
-      min-width: 200px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--dark);
-      font-family: var(--font-b);
-      font-size: 0.95rem;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .search-card input:focus { border-color: var(--gold); }
-    .search-card button {
-      background: var(--dark);
-      color: #fff;
-      border: none;
-      font-family: var(--font-b);
-      font-size: 0.85rem;
-      font-weight: 500;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .search-card button:hover { background: var(--gold); }
-
-    /* STATUS */
-    #status {
-      padding: 1rem 1.25rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-      display: none;
-    }
-    #status.carregando { display: block; background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
-    #status.erro       { display: block; background: rgba(192,57,43,0.06); color: var(--danger); border: 1px solid rgba(192,57,43,0.2); }
-    #status.vazio      { display: block; background: var(--surface); color: var(--muted); border: 1px solid var(--border); text-align: center; padding: 2.5rem; }
-
-    #stats-bar { font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; display: none; }
-    #stats-bar span { color: var(--gold); font-weight: 500; }
-
-    /* CARDS */
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; }
+    header { position: relative; padding: 4rem 2rem 3rem; text-align: center; border-bottom: 1px solid var(--border); overflow: hidden; }
+    header::after { content: '⚖'; position: absolute; font-size: 22rem; opacity: 0.03; top: -4rem; right: -4rem; line-height: 1; pointer-events: none; }
+    .header-eyebrow { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    h1 { font-family: var(--font-head); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.1; color: var(--text); }
+    h1 span { color: var(--accent); }
+    .header-sub { margin-top: 0.75rem; color: var(--muted); font-size: 0.95rem; }
+    main { position: relative; max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; z-index: 1; }
+    .search-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin-bottom: 2.5rem; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+    .tab { background: none; border: 1px solid transparent; color: var(--muted); font-family: var(--font-body); font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .tab:hover { color: var(--text); border-color: var(--border); }
+    .tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 500; }
+    .busca-form { display: none; gap: 0.75rem; }
+    .busca-form.ativo { display: flex; flex-wrap: wrap; }
+    .busca-form input { flex: 1; min-width: 200px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: var(--font-body); font-size: 0.95rem; padding: 0.75rem 1rem; border-radius: 8px; outline: none; transition: border-color 0.2s; }
+    .busca-form input::placeholder { color: var(--muted); }
+    .busca-form input:focus { border-color: var(--accent); }
+    .busca-form button { background: var(--accent); color: var(--bg); border: none; font-family: var(--font-body); font-size: 0.9rem; font-weight: 500; padding: 0.75rem 1.75rem; border-radius: 8px; cursor: pointer; transition: background 0.2s, transform 0.1s; white-space: nowrap; }
+    .busca-form button:hover { background: var(--accent2); }
+    .busca-form button:active { transform: scale(0.98); }
+    .busca-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+    #stats-bar { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; display: none; }
+    #stats-bar span { color: var(--accent); font-weight: 500; }
+    #status { padding: 1rem 1.25rem; border-radius: 8px; font-size: 0.9rem; margin-bottom: 1.5rem; display: none; }
+    #status.carregando { display: block; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+    #status.erro { display: block; background: rgba(224,92,92,0.08); color: var(--danger); border: 1px solid rgba(224,92,92,0.3); }
+    #status.vazio { display: block; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); text-align: center; padding: 2rem; }
     #lista { display: flex; flex-direction: column; gap: 1rem; }
-
-    .processo-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      cursor: pointer;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      animation: fadeUp 0.3s ease both;
-    }
-    .processo-card:hover {
-      border-color: var(--gold);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1.25rem 1.5rem;
-    }
-    .tribunal-badge {
-      background: var(--bg);
-      color: var(--gold);
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.7rem;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    .processo-numero {
-      font-family: var(--font-h);
-      font-size: 1.05rem;
-      font-weight: 600;
-      flex: 1;
-    }
+    .processo-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: border-color 0.2s, transform 0.2s; animation: fadeUp 0.35s ease both; }
+    .processo-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .card-header { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; }
+    .tribunal-badge { background: var(--surface2); color: var(--accent); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.7rem; border-radius: 4px; white-space: nowrap; }
+    .processo-numero { font-family: var(--font-head); font-size: 1rem; font-weight: 700; color: var(--text); flex: 1; }
     .processo-data { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
-
-    .card-body {
-      border-top: 1px solid var(--border);
-      padding: 1rem 1.5rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 0.75rem;
-    }
-    .campo label {
-      display: block;
-      font-size: 0.62rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.2rem;
-    }
-    .campo p { font-size: 0.88rem; }
-
+    .card-body { border-top: 1px solid var(--border); padding: 1rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
+    .campo label { display: block; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.2rem; }
+    .campo p { font-size: 0.88rem; color: var(--text); }
     .movimentos-section { display: none; border-top: 1px solid var(--border); padding: 1rem 1.5rem; }
     .processo-card.aberto .movimentos-section { display: block; }
-    .mov-title { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
-    .movimento { display: flex; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .movimentos-title { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+    .movimento { display: flex; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
     .movimento:last-child { border-bottom: none; }
-    .mov-data { color: var(--gold); white-space: nowrap; font-size: 0.78rem; }
-    .toggle-hint { padding: 0.4rem 1.5rem 0.6rem; font-size: 0.72rem; color: var(--muted); text-align: right; }
-
-    .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 0.5rem; }
+    .mov-data { color: var(--accent); white-space: nowrap; font-size: 0.78rem; }
+    .mov-nome { color: var(--text); }
+    .toggle-hint { padding: 0.5rem 1.5rem 0.75rem; font-size: 0.75rem; color: var(--muted); text-align: right; }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 0.5rem; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     footer { text-align: center; padding: 2rem; font-size: 0.75rem; color: var(--muted); border-top: 1px solid var(--border); }
+    footer a { color: var(--accent); text-decoration: none; }
   </style>
 </head>
 <body>
-
-<!-- ── TELA DE LOGIN ─────────────────────────────────── -->
-<div id="tela-login">
-  <div class="login-card">
-    <div class="login-logo">
-      <span class="icone">⚖️</span>
-      <h1>Portal Jurídico</h1>
-      <p>Acesso Restrito</p>
+<header>
+  <p class="header-eyebrow">Sistema de Consulta</p>
+  <h1>Processos <span>Judiciais</span></h1>
+  <p class="header-sub">Dados via API DataJud · CNJ</p>
+</header>
+<main>
+  <div class="search-card">
+    <div class="tabs">
+      <button class="tab active" onclick="trocarAba('numero', this)">Nº Processo</button>
+      <button class="tab" onclick="trocarAba('nome', this)">Nome da Parte</button>
+      <button class="tab" onclick="trocarAba('oab', this)">OAB</button>
     </div>
-    <div class="divider"></div>
-
-    <div class="campo-login">
-      <label>Advogada</label>
-      <select id="sel-usuario">
-        <option value="">— Selecione —</option>
-        <option value="ana">Ana Flavia Soares Passos</option>
-        <option value="elisangela">Elisangela Souza</option>
-      </select>
-    </div>
-
-    <div class="campo-login">
-      <label>Senha</label>
-      <input type="password" id="inp-senha" placeholder="Digite sua senha" />
-    </div>
-
-    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
-    <div class="erro-login" id="erro-login">Usuário ou senha incorretos.</div>
+    <form class="busca-form ativo" id="form-numero" onsubmit="buscar(event,'numero')">
+      <input type="text" id="inp-numero" placeholder="Ex: 0001234-56.2023.8.05.0001" />
+      <button type="submit" id="btn-numero">Buscar</button>
+    </form>
+    <form class="busca-form" id="form-nome" onsubmit="buscar(event,'nome')">
+      <input type="text" id="inp-nome" placeholder="Nome completo da parte" />
+      <button type="submit" id="btn-nome">Buscar</button>
+    </form>
+    <form class="busca-form" id="form-oab" onsubmit="buscar(event,'oab')">
+      <input type="text" id="inp-oab" placeholder="Número OAB (ex: 12345)" style="max-width:180px" />
+      <input type="text" id="inp-uf" placeholder="UF (ex: BA)" style="max-width:90px" />
+      <button type="submit" id="btn-oab">Buscar</button>
+    </form>
   </div>
-</div>
-
-<!-- ── PORTAL PRINCIPAL ──────────────────────────────── -->
-<div id="tela-portal">
-  <header>
-    <div class="header-left">
-      <div class="avatar" id="avatar-inicial">A</div>
-      <div class="header-user">
-        <strong id="nome-usuario">—</strong>
-        <span id="oab-usuario">OAB —</span>
-      </div>
-    </div>
-    <button class="btn-sair" onclick="sair()">Sair</button>
-  </header>
-
-  <main>
-    <div class="boas-vindas">
-      <h2 id="titulo-boas-vindas">Bem-vinda!</h2>
-      <p>Seus processos são carregados automaticamente abaixo.</p>
-    </div>
-
-    <div class="search-card">
-      <input type="text" id="inp-busca" placeholder="Buscar por número do processo..." />
-      <button onclick="buscarNumero()">Buscar</button>
-    </div>
-
-    <div id="stats-bar"></div>
-    <div id="status"></div>
-    <div id="lista"></div>
-  </main>
-
-  <footer>Portal Jurídico · Dados via TJBA</footer>
-</div>
-
+  <div id="stats-bar"></div>
+  <div id="status"></div>
+  <div id="lista"></div>
+</main>
+<footer>
+  Dados fornecidos pelo <a href="https://datajud.cnj.jus.br" target="_blank">DataJud · CNJ</a>. Consulta meramente informativa.
+</footer>
 <script>
   const API = "http://localhost:8000";
-
-  // ── USUÁRIOS ──────────────────────────────────────────
-  const USUARIOS = {
-    ana: {
-      nome: "Ana Flavia Soares Passos",
-      oab: "OAB 75235/BA",
-      senha: "ana123",
-      inicial: "A"
-    },
-    elisangela: {
-      nome: "Elisangela Souza",
-      oab: "OAB 74403/BA",
-      senha: "eli123",
-      inicial: "E"
-    }
-  };
-
-  let usuarioAtual = null;
-
-  // ── LOGIN ─────────────────────────────────────────────
-  function fazerLogin() {
-    const sel   = document.getElementById('sel-usuario').value;
-    const senha = document.getElementById('inp-senha').value;
-    const erro  = document.getElementById('erro-login');
-
-    if (!sel || !USUARIOS[sel]) {
-      erro.style.display = 'block';
-      erro.textContent = 'Selecione uma advogada.';
-      return;
-    }
-    if (senha !== USUARIOS[sel].senha) {
-      erro.style.display = 'block';
-      erro.textContent = 'Senha incorreta.';
-      return;
-    }
-
-    erro.style.display = 'none';
-    usuarioAtual = sel;
-    const u = USUARIOS[sel];
-
-    document.getElementById('nome-usuario').textContent = u.nome;
-    document.getElementById('oab-usuario').textContent  = u.oab;
-    document.getElementById('avatar-inicial').textContent = u.inicial;
-    document.getElementById('titulo-boas-vindas').textContent = `Bem-vinda, ${u.nome.split(' ')[0]}!`;
-
-    document.getElementById('tela-login').style.display  = 'none';
-    document.getElementById('tela-portal').style.display = 'block';
-
-    carregarProcessos();
-  }
-
-  // Permite login com Enter
-  document.getElementById('inp-senha').addEventListener('keydown', e => {
-    if (e.key === 'Enter') fazerLogin();
-  });
-
-  function sair() {
-    usuarioAtual = null;
-    document.getElementById('tela-login').style.display  = 'flex';
-    document.getElementById('tela-portal').style.display = 'none';
-    document.getElementById('inp-senha').value = '';
-    document.getElementById('sel-usuario').value = '';
+  function trocarAba(tipo, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.busca-form').forEach(f => f.classList.remove('ativo'));
+    btn.classList.add('active');
+    document.getElementById('form-' + tipo).classList.add('ativo');
     limpar();
   }
-
-  // ── CARREGAR PROCESSOS ────────────────────────────────
-  async function carregarProcessos() {
-    limpar();
-    setStatus('carregando', '<span class="spinner"></span> Carregando seus processos…');
-    try {
-      const r = await fetch(API + '/processos');
-      if (!r.ok) throw new Error();
-      const data = await r.json();
-      renderizar(data);
-    } catch {
-      setStatus('erro', '⚠ Não foi possível conectar ao servidor. Verifique se o servidor.py está rodando.');
-    }
-  }
-
-  async function buscarNumero() {
-    const v = document.getElementById('inp-busca').value.trim();
-    if (!v) { carregarProcessos(); return; }
-    limpar();
-    setStatus('carregando', '<span class="spinner"></span> Buscando…');
-    try {
-      const r = await fetch(API + `/processos?numero=${encodeURIComponent(v)}`);
-      const data = await r.json();
-      renderizar(data);
-    } catch {
-      setStatus('erro', '⚠ Erro ao conectar ao servidor.');
-    }
-  }
-
-  // ── RENDERIZAR ────────────────────────────────────────
-  function renderizar(processos) {
-    const lista = document.getElementById('lista');
-    const stats = document.getElementById('stats-bar');
-    if (!processos.length) {
-      setStatus('vazio', '🔍 Nenhum processo encontrado.');
-      return;
-    }
-    document.getElementById('status').style.display = 'none';
-    stats.style.display = 'block';
-    stats.innerHTML = `<span>${processos.length}</span> processo(s) encontrado(s)`;
-    lista.innerHTML = '';
-    processos.forEach((p, i) => {
-      lista.innerHTML += criarCard(p, i);
-    });
-  }
-
-  function criarCard(p, i) {
-    const tribunal = p.tribunal || '—';
-    const numero   = p.numero_cnj || p.numeroProcesso || '—';
-    const classe   = p.classe || '—';
-    const assunto  = p.assunto || '—';
-    const data     = formatarData(p.data_ajuizamento || p.dataAjuizamento);
-    const situacao = p.situacao || '—';
-    const link     = p.link || '';
-    const movs     = Array.isArray(p.movimentos) ? p.movimentos : [];
-
-    const movsHtml = movs.slice(0, 10).map(m =>
-      `<div class="movimento">
-        <span class="mov-data">${formatarData(m.dataHora || m.data)}</span>
-        <span>${m.nome || m.descricao || ''}</span>
-      </div>`
-    ).join('');
-
-    const linkBtn = link ? `<a href="${link}" target="_blank" style="font-size:.8rem;color:var(--gold);text-decoration:none;margin-left:auto" onclick="event.stopPropagation()">Ver no TJBA ↗</a>` : '';
-
-    return `
-      <div class="processo-card" id="card-${i}" onclick="toggleCard(${i})" style="animation-delay:${i*0.04}s">
-        <div class="card-header">
-          <span class="tribunal-badge">${tribunal}</span>
-          <span class="processo-numero">${numero}</span>
-          ${linkBtn}
-          <span class="processo-data">${data}</span>
-        </div>
-        <div class="card-body">
-          <div class="campo"><label>Classe</label><p>${classe}</p></div>
-          <div class="campo"><label>Assunto</label><p>${assunto}</p></div>
-          <div class="campo"><label>Situação</label><p>${situacao}</p></div>
-        </div>
-        <div class="toggle-hint">▼ clique para ver movimentações</div>
-        <div class="movimentos-section">
-          ${movs.length ? `<p class="mov-title">Movimentações</p>${movsHtml}` : '<p style="color:var(--muted);font-size:.85rem">Sem movimentações registradas.</p>'}
-        </div>
-      </div>`;
-  }
-
-  function toggleCard(i) {
-    document.getElementById('card-' + i).classList.toggle('aberto');
-  }
-
-  // ── HELPERS ───────────────────────────────────────────
   function limpar() {
     document.getElementById('lista').innerHTML = '';
     document.getElementById('status').style.display = 'none';
     document.getElementById('status').className = '';
     document.getElementById('stats-bar').style.display = 'none';
   }
-  function setStatus(tipo, html) {
-    const el = document.getElementById('status');
-    el.className = tipo;
-    el.innerHTML = html;
-    el.style.display = 'block';
+  async function buscar(e, tipo) {
+    e.preventDefault();
+    limpar();
+    let endpoint, body;
+    if (tipo === 'numero') {
+      const v = document.getElementById('inp-numero').value.trim();
+      if (!v) return;
+      endpoint = '/buscar/numero';
+      body = { numero: v };
+    } else if (tipo === 'nome') {
+      const v = document.getElementById('inp-nome').value.trim();
+      if (!v) return;
+      endpoint = '/buscar/nome';
+      body = { nome: v };
+    } else {
+      const oab = document.getElementById('inp-oab').value.trim();
+      const uf  = document.getElementById('inp-uf').value.trim();
+      if (!oab) return;
+      endpoint = '/buscar/oab';
+      body = { oab, uf };
+    }
+    setStatus('carregando', '<span class="spinner"></span> Consultando o DataJud…');
+    setBtnLoading(tipo, true);
+    try {
+      const r = await fetch(API + endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if (!r.ok) throw new Error();
+      const data = await r.json();
+      renderizar(data.processos || []);
+    } catch (err) {
+      setStatus('erro', '⚠ Não foi possível conectar ao servidor. Verifique se o servidor.py está rodando em localhost:8000.');
+    } finally {
+      setBtnLoading(tipo, false);
+    }
   }
-  function formatarData(str) {
-    if (!str) return '—';
-    try { return new Date(str).toLocaleDateString('pt-BR'); } catch { return str; }
+  function renderizar(processos) {
+    const lista = document.getElementById('lista');
+    const stats = document.getElementById('stats-bar');
+    if (!processos.length) { setStatus('vazio', '🔍 Nenhum processo encontrado para este critério.'); return; }
+    document.getElementById('status').style.display = 'none';
+    stats.style.display = 'block';
+    stats.innerHTML = `<span>${processos.length}</span> processo(s) encontrado(s)`;
+    lista.innerHTML = '';
+    processos.forEach((p, i) => { lista.innerHTML += criarCard(p, i); });
   }
+  function criarCard(p, i) {
+    const tribunal = p.tribunal || p.siglaTribunal || '—';
+    const numero   = p.numeroProcesso || p.numero_cnj || '—';
+    const classe   = p.classe?.nome || p.classe || '—';
+    const assunto  = Array.isArray(p.assuntos) ? p.assuntos.map(a => a.nome || a).join(', ') : (p.assunto || '—');
+    const dataAdj  = formatarData(p.dataAjuizamento || p.data_ajuizamento);
+    const grau     = p.grau || '—';
+    const partes   = Array.isArray(p.partes) ? p.partes : (typeof p.partes === 'string' ? tryParse(p.partes) : []);
+    const movs     = Array.isArray(p.movimentos) ? p.movimentos : (typeof p.movimentos === 'string' ? tryParse(p.movimentos) : []);
+    const partesHtml = partes.slice(0, 4).map(pt => `<div class="movimento"><span class="mov-data">${pt.polo || ''}</span><span class="mov-nome">${pt.nome || ''}</span></div>`).join('');
+    const movsHtml = movs.slice(0, 10).map(m => `<div class="movimento"><span class="mov-data">${formatarData(m.dataHora || m.data)}</span><span class="mov-nome">${m.nome || m.descricao || ''}</span></div>`).join('');
+    return `
+      <div class="processo-card" id="card-${i}" onclick="toggleCard(${i})" style="animation-delay:${i*0.05}s">
+        <div class="card-header">
+          <span class="tribunal-badge">${tribunal}</span>
+          <span class="processo-numero">${numero}</span>
+          <span class="processo-data">${dataAdj}</span>
+        </div>
+        <div class="card-body">
+          <div class="campo"><label>Classe</label><p>${classe}</p></div>
+          <div class="campo"><label>Assunto</label><p>${assunto}</p></div>
+          <div class="campo"><label>Grau</label><p>${grau}</p></div>
+        </div>
+        <div class="toggle-hint">▼ clique para ver partes e movimentos</div>
+        <div class="movimentos-section">
+          ${partes.length ? `<p class="movimentos-title">Partes</p>${partesHtml}` : ''}
+          ${movs.length  ? `<p class="movimentos-title" style="margin-top:1rem">Movimentações</p>${movsHtml}` : ''}
+          ${!partes.length && !movs.length ? '<p style="color:var(--muted);font-size:.85rem">Sem detalhes disponíveis.</p>' : ''}
+        </div>
+      </div>`;
+  }
+  function toggleCard(i) { document.getElementById('card-' + i).classList.toggle('aberto'); }
+  function setStatus(tipo, html) { const el = document.getElementById('status'); el.className = tipo; el.innerHTML = html; el.style.display = 'block'; }
+  function setBtnLoading(tipo, loading) { const btn = document.getElementById('btn-' + tipo); btn.disabled = loading; btn.textContent = loading ? 'Buscando…' : 'Buscar'; }
+  function formatarData(str) { if (!str) return '—'; try { return new Date(str).toLocaleDateString('pt-BR'); } catch { return str; } }
+  function tryParse(str) { try { return JSON.parse(str); } catch { return []; } }
 </script>
 </body>
 </html>
