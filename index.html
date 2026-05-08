@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <style>
+    /* ── TOKENS ─────────────────────────────────────────── */
     :root {
       --bg:        #0d0f14;
       --surface:   #13161e;
@@ -22,98 +23,388 @@
       --font-head: 'Playfair Display', Georgia, serif;
       --font-body: 'DM Sans', sans-serif;
     }
+
+    /* ── RESET ───────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-weight: 300; min-height: 100vh; overflow-x: hidden; }
-    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; }
-    header { position: relative; padding: 4rem 2rem 3rem; text-align: center; border-bottom: 1px solid var(--border); overflow: hidden; }
-    header::after { content: '⚖'; position: absolute; font-size: 22rem; opacity: 0.03; top: -4rem; right: -4rem; line-height: 1; pointer-events: none; }
-    .header-eyebrow { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
-    h1 { font-family: var(--font-head); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.1; color: var(--text); }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE ───────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    header {
+      position: relative;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    header::after {
+      content: '⚖';
+      position: absolute;
+      font-size: 22rem;
+      opacity: 0.03;
+      top: -4rem; right: -4rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .header-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--text);
+    }
     h1 span { color: var(--accent); }
-    .header-sub { margin-top: 0.75rem; color: var(--muted); font-size: 0.95rem; }
-    main { position: relative; max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; z-index: 1; }
-    .search-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin-bottom: 2.5rem; }
-    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
-    .tab { background: none; border: 1px solid transparent; color: var(--muted); font-family: var(--font-body); font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .header-sub {
+      margin-top: 0.75rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── MAIN CONTAINER ──────────────────────────────────── */
+    main {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 5rem;
+      z-index: 1;
+    }
+
+    /* ── SEARCH CARD ─────────────────────────────────────── */
+    .search-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    .tab {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
     .tab:hover { color: var(--text); border-color: var(--border); }
-    .tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 500; }
+    .tab.active {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+      font-weight: 500;
+    }
+
     .busca-form { display: none; gap: 0.75rem; }
     .busca-form.ativo { display: flex; flex-wrap: wrap; }
-    .busca-form input { flex: 1; min-width: 200px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: var(--font-body); font-size: 0.95rem; padding: 0.75rem 1rem; border-radius: 8px; outline: none; transition: border-color 0.2s; }
+    .busca-form input {
+      flex: 1;
+      min-width: 200px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
     .busca-form input::placeholder { color: var(--muted); }
     .busca-form input:focus { border-color: var(--accent); }
-    .busca-form button { background: var(--accent); color: var(--bg); border: none; font-family: var(--font-body); font-size: 0.9rem; font-weight: 500; padding: 0.75rem 1.75rem; border-radius: 8px; cursor: pointer; transition: background 0.2s, transform 0.1s; white-space: nowrap; }
+    .busca-form button {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
     .busca-form button:hover { background: var(--accent2); }
     .busca-form button:active { transform: scale(0.98); }
     .busca-form button:disabled { opacity: 0.5; cursor: not-allowed; }
-    #stats-bar { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; display: none; }
+
+    /* ── STATS BAR ───────────────────────────────────────── */
+    #stats-bar {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      display: none;
+    }
     #stats-bar span { color: var(--accent); font-weight: 500; }
-    #status { padding: 1rem 1.25rem; border-radius: 8px; font-size: 0.9rem; margin-bottom: 1.5rem; display: none; }
-    #status.carregando { display: block; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
-    #status.erro { display: block; background: rgba(224,92,92,0.08); color: var(--danger); border: 1px solid rgba(224,92,92,0.3); }
-    #status.vazio { display: block; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); text-align: center; padding: 2rem; }
+
+    /* ── STATUS ──────────────────────────────────────────── */
+    #status {
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    #status.carregando {
+      display: block;
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    #status.erro {
+      display: block;
+      background: rgba(224,92,92,0.08);
+      color: var(--danger);
+      border: 1px solid rgba(224,92,92,0.3);
+    }
+    #status.vazio {
+      display: block;
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    /* ── PROCESSOS LIST ──────────────────────────────────── */
     #lista { display: flex; flex-direction: column; gap: 1rem; }
-    .processo-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: border-color 0.2s, transform 0.2s; animation: fadeUp 0.35s ease both; }
-    .processo-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .card-header { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; }
-    .tribunal-badge { background: var(--surface2); color: var(--accent); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.7rem; border-radius: 4px; white-space: nowrap; }
-    .processo-numero { font-family: var(--font-head); font-size: 1rem; font-weight: 700; color: var(--text); flex: 1; }
-    .processo-data { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
-    .card-body { border-top: 1px solid var(--border); padding: 1rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
-    .campo label { display: block; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.2rem; }
-    .campo p { font-size: 0.88rem; color: var(--text); }
-    .movimentos-section { display: none; border-top: 1px solid var(--border); padding: 1rem 1.5rem; }
+
+    .processo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+      animation: fadeUp 0.35s ease both;
+    }
+    .processo-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+    }
+    .tribunal-badge {
+      background: var(--surface2);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .processo-numero {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      flex: 1;
+    }
+    .processo-data {
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .card-body {
+      border-top: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    .campo label {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+    .campo p {
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+
+    /* ── MOVIMENTOS ──────────────────────────────────────── */
+    .movimentos-section {
+      display: none;
+      border-top: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+    }
     .processo-card.aberto .movimentos-section { display: block; }
-    .movimentos-title { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
-    .movimento { display: flex; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .movimentos-title {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .movimento {
+      display: flex;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
     .movimento:last-child { border-bottom: none; }
     .mov-data { color: var(--accent); white-space: nowrap; font-size: 0.78rem; }
     .mov-nome { color: var(--text); }
-    .toggle-hint { padding: 0.5rem 1.5rem 0.75rem; font-size: 0.75rem; color: var(--muted); text-align: right; }
-    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 0.5rem; }
+
+    /* ── TOGGLE HINT ─────────────────────────────────────── */
+    .toggle-hint {
+      padding: 0.5rem 1.5rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    /* ── SPINNER ─────────────────────────────────────────── */
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
-    footer { text-align: center; padding: 2rem; font-size: 0.75rem; color: var(--muted); border-top: 1px solid var(--border); }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
     footer a { color: var(--accent); text-decoration: none; }
   </style>
 </head>
 <body>
+
 <header>
   <p class="header-eyebrow">Sistema de Consulta</p>
   <h1>Processos <span>Judiciais</span></h1>
   <p class="header-sub">Dados via API DataJud · CNJ</p>
 </header>
+
 <main>
+
+  <!-- CARD DE BUSCA -->
   <div class="search-card">
     <div class="tabs">
       <button class="tab active" onclick="trocarAba('numero', this)">Nº Processo</button>
       <button class="tab" onclick="trocarAba('nome', this)">Nome da Parte</button>
       <button class="tab" onclick="trocarAba('oab', this)">OAB</button>
     </div>
+
+    <!-- por número -->
     <form class="busca-form ativo" id="form-numero" onsubmit="buscar(event,'numero')">
       <input type="text" id="inp-numero" placeholder="Ex: 0001234-56.2023.8.05.0001" />
       <button type="submit" id="btn-numero">Buscar</button>
     </form>
+
+    <!-- por nome -->
     <form class="busca-form" id="form-nome" onsubmit="buscar(event,'nome')">
       <input type="text" id="inp-nome" placeholder="Nome completo da parte" />
       <button type="submit" id="btn-nome">Buscar</button>
     </form>
+
+    <!-- por OAB -->
     <form class="busca-form" id="form-oab" onsubmit="buscar(event,'oab')">
       <input type="text" id="inp-oab" placeholder="Número OAB (ex: 12345)" style="max-width:180px" />
-      <input type="text" id="inp-uf" placeholder="UF (ex: BA)" style="max-width:90px" />
+      <input type="text" id="inp-uf"  placeholder="UF (ex: BA)" style="max-width:90px" />
       <button type="submit" id="btn-oab">Buscar</button>
     </form>
   </div>
+
+  <!-- STATS -->
   <div id="stats-bar"></div>
+
+  <!-- STATUS / ERROS -->
   <div id="status"></div>
+
+  <!-- LISTA DE PROCESSOS -->
   <div id="lista"></div>
+
 </main>
+
 <footer>
-  Dados fornecidos pelo <a href="https://datajud.cnj.jus.br" target="_blank">DataJud · CNJ</a>. Consulta meramente informativa.
+  Dados fornecidos pelo <a href="https://datajud.cnj.jus.br" target="_blank">DataJud · CNJ</a>. 
+  Consulta meramente informativa.
 </footer>
+
 <script>
-  const API = "http://localhost:8000";
+  // ── CONFIG ────────────────────────────────────────────────
+  const API = "http://localhost:8000"; // URL do servidor.py
+
+  // ── AUTO CARREGAR AO ABRIR ──────────────────────────────────
+  window.addEventListener('DOMContentLoaded', async () => {
+    limpar();
+    setStatus('carregando', '<span class="spinner"></span> Carregando processos da OAB 75235-BA…');
+    try {
+      const r = await fetch(API + '/processos');
+      if (!r.ok) throw new Error();
+      const data = await r.json();
+      if (data.length === 0) {
+        setStatus('vazio', '🔍 Nenhum processo encontrado ainda. O servidor pode ainda estar buscando — aguarde e recarregue a página.');
+      } else {
+        renderizar(data);
+      }
+    } catch {
+      setStatus('erro', '⚠ Não foi possível conectar ao servidor. Verifique se o servidor.py está rodando.');
+    }
+  });
+
+  // ── ABAS ──────────────────────────────────────────────────
   function trocarAba(tipo, btn) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.busca-form').forEach(f => f.classList.remove('ativo'));
@@ -121,16 +412,21 @@
     document.getElementById('form-' + tipo).classList.add('ativo');
     limpar();
   }
+
   function limpar() {
     document.getElementById('lista').innerHTML = '';
     document.getElementById('status').style.display = 'none';
     document.getElementById('status').className = '';
     document.getElementById('stats-bar').style.display = 'none';
   }
+
+  // ── BUSCA ──────────────────────────────────────────────────
   async function buscar(e, tipo) {
     e.preventDefault();
     limpar();
+
     let endpoint, body;
+
     if (tipo === 'numero') {
       const v = document.getElementById('inp-numero').value.trim();
       if (!v) return;
@@ -148,40 +444,73 @@
       endpoint = '/buscar/oab';
       body = { oab, uf };
     }
+
     setStatus('carregando', '<span class="spinner"></span> Consultando o DataJud…');
     setBtnLoading(tipo, true);
+
     try {
-      const r = await fetch(API + endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-      if (!r.ok) throw new Error();
+      const r = await fetch(API + endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const data = await r.json();
       renderizar(data.processos || []);
     } catch (err) {
       setStatus('erro', '⚠ Não foi possível conectar ao servidor. Verifique se o servidor.py está rodando em localhost:8000.');
+      console.error(err);
     } finally {
       setBtnLoading(tipo, false);
     }
   }
+
+  // ── RENDERIZAR ────────────────────────────────────────────
   function renderizar(processos) {
     const lista = document.getElementById('lista');
     const stats = document.getElementById('stats-bar');
-    if (!processos.length) { setStatus('vazio', '🔍 Nenhum processo encontrado para este critério.'); return; }
+
+    if (!processos.length) {
+      setStatus('vazio', '🔍 Nenhum processo encontrado para este critério.');
+      return;
+    }
+
     document.getElementById('status').style.display = 'none';
     stats.style.display = 'block';
     stats.innerHTML = `<span>${processos.length}</span> processo(s) encontrado(s)`;
+
     lista.innerHTML = '';
-    processos.forEach((p, i) => { lista.innerHTML += criarCard(p, i); });
+    processos.forEach((p, i) => {
+      lista.innerHTML += criarCard(p, i);
+    });
   }
+
   function criarCard(p, i) {
-    const tribunal = p.tribunal || p.siglaTribunal || '—';
-    const numero   = p.numeroProcesso || p.numero_cnj || '—';
-    const classe   = p.classe?.nome || p.classe || '—';
-    const assunto  = Array.isArray(p.assuntos) ? p.assuntos.map(a => a.nome || a).join(', ') : (p.assunto || '—');
-    const dataAdj  = formatarData(p.dataAjuizamento || p.data_ajuizamento);
-    const grau     = p.grau || '—';
-    const partes   = Array.isArray(p.partes) ? p.partes : (typeof p.partes === 'string' ? tryParse(p.partes) : []);
-    const movs     = Array.isArray(p.movimentos) ? p.movimentos : (typeof p.movimentos === 'string' ? tryParse(p.movimentos) : []);
-    const partesHtml = partes.slice(0, 4).map(pt => `<div class="movimento"><span class="mov-data">${pt.polo || ''}</span><span class="mov-nome">${pt.nome || ''}</span></div>`).join('');
-    const movsHtml = movs.slice(0, 10).map(m => `<div class="movimento"><span class="mov-data">${formatarData(m.dataHora || m.data)}</span><span class="mov-nome">${m.nome || m.descricao || ''}</span></div>`).join('');
+    const tribunal  = p.tribunal || p.siglaTribunal || '—';
+    const numero    = p.numeroProcesso || p.numero_cnj || '—';
+    const classe    = p.classe?.nome || p.classe || '—';
+    const assunto   = Array.isArray(p.assuntos)
+      ? p.assuntos.map(a => a.nome || a).join(', ')
+      : (p.assunto || '—');
+    const dataAdj   = formatarData(p.dataAjuizamento || p.data_ajuizamento);
+    const grau      = p.grau || '—';
+    const partes    = Array.isArray(p.partes) ? p.partes : (typeof p.partes === 'string' ? tryParse(p.partes) : []);
+    const movs      = Array.isArray(p.movimentos) ? p.movimentos : (typeof p.movimentos === 'string' ? tryParse(p.movimentos) : []);
+
+    const partesHtml = partes.slice(0, 4).map(pt =>
+      `<div class="movimento">
+        <span class="mov-data">${pt.polo || ''}</span>
+        <span class="mov-nome">${pt.nome || ''}</span>
+      </div>`
+    ).join('');
+
+    const movsHtml = movs.slice(0, 10).map(m =>
+      `<div class="movimento">
+        <span class="mov-data">${formatarData(m.dataHora || m.data)}</span>
+        <span class="mov-nome">${m.nome || m.descricao || ''}</span>
+      </div>`
+    ).join('');
+
     return `
       <div class="processo-card" id="card-${i}" onclick="toggleCard(${i})" style="animation-delay:${i*0.05}s">
         <div class="card-header">
@@ -202,11 +531,36 @@
         </div>
       </div>`;
   }
-  function toggleCard(i) { document.getElementById('card-' + i).classList.toggle('aberto'); }
-  function setStatus(tipo, html) { const el = document.getElementById('status'); el.className = tipo; el.innerHTML = html; el.style.display = 'block'; }
-  function setBtnLoading(tipo, loading) { const btn = document.getElementById('btn-' + tipo); btn.disabled = loading; btn.textContent = loading ? 'Buscando…' : 'Buscar'; }
-  function formatarData(str) { if (!str) return '—'; try { return new Date(str).toLocaleDateString('pt-BR'); } catch { return str; } }
-  function tryParse(str) { try { return JSON.parse(str); } catch { return []; } }
+
+  function toggleCard(i) {
+    document.getElementById('card-' + i).classList.toggle('aberto');
+  }
+
+  // ── HELPERS ───────────────────────────────────────────────
+  function setStatus(tipo, html) {
+    const el = document.getElementById('status');
+    el.className = tipo;
+    el.innerHTML = html;
+    el.style.display = 'block';
+  }
+
+  function setBtnLoading(tipo, loading) {
+    const btn = document.getElementById('btn-' + tipo);
+    btn.disabled = loading;
+    btn.textContent = loading ? 'Buscando…' : 'Buscar';
+  }
+
+  function formatarData(str) {
+    if (!str) return '—';
+    try {
+      return new Date(str).toLocaleDateString('pt-BR');
+    } catch { return str; }
+  }
+
+  function tryParse(str) {
+    try { return JSON.parse(str); } catch { return []; }
+  }
 </script>
 </body>
 </html>
+    
