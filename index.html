@@ -269,7 +269,7 @@ textarea{resize:vertical;min-height:70px}
         <label class="login-label">Usuário</label>
         <div class="login-input-wrap">
           <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <input type="text" class="login-input" id="login-user" placeholder="Ex: Ana Passos" onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()">
+          <input type="text" class="login-input" id="login-user" placeholder="Ex: joao.silva" onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()">
         </div>
       </div>
 
@@ -337,7 +337,7 @@ textarea{resize:vertical;min-height:70px}
       <div class="sb-item" onclick="nav('prazos',this)">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
         Prazos
-        <span class="sb-badge red" id="badge-prazos">0</span>
+        <span class="sb-badge red" id="badge-prazos">3</span>
       </div>
       <div class="sb-section">Gestão</div>
       <div class="sb-item" onclick="nav('clientes',this)">
@@ -373,8 +373,8 @@ textarea{resize:vertical;min-height:70px}
       </div>
     </div>
     <div class="sb-footer">
-      <div class="sb-footer-name" id="sb-user-name">Dra. Ana Flávia</div>
-      <div class="sb-footer-oab" id="sb-user-oab">OAB/BA 75.235</div>
+      <div class="sb-footer-name" id="sb-user-name">Dr. João Silva</div>
+      <div class="sb-footer-oab" id="sb-user-oab">OAB/BA 45.892</div>
       <button onclick="fazerLogout()" style="margin-top:10px;width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);padding:7px 10px;border-radius:var(--r);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:7px;font-family:Inter,sans-serif;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.07)'">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" style="width:15px;height:15px"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sair do sistema
@@ -494,15 +494,18 @@ textarea{resize:vertical;min-height:70px}
 
       <!-- ALERTAS -->
       <div class="page" id="page-alertas">
+
+        <!-- BANNER INFO -->
         <div style="background:var(--blue);border:1px solid var(--bborder);border-radius:var(--rl);padding:14px 18px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start">
           <svg fill="none" viewBox="0 0 24 24" stroke="var(--btxt)" stroke-width="2" style="width:18px;height:18px;flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           <div style="font-size:13px;color:var(--btxt);line-height:1.6">
             <strong>Integração real com WhatsApp (Z-API) e E-mail (EmailJS).</strong><br>
-            Preencha suas credenciais abaixo e os alertas serão enviados de verdade.
+            Preencha suas credenciais abaixo e os alertas serão enviados de verdade. 
             Crie sua conta gratuita em <a href="https://z-api.io" target="_blank" style="color:var(--btxt);font-weight:600">z-api.io</a> (WhatsApp) e <a href="https://www.emailjs.com" target="_blank" style="color:var(--btxt);font-weight:600">emailjs.com</a> (e-mail).
           </div>
         </div>
 
+        <!-- Z-API CONFIG -->
         <div class="alert-config">
           <div class="alert-config-title">
             <svg fill="none" viewBox="0 0 24 24" stroke="#25D366" stroke-width="1.8" style="width:17px;height:17px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.69 3.46 2 2 0 0 1 3.68 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -540,8 +543,12 @@ textarea{resize:vertical;min-height:70px}
               Criar conta Z-API
             </a>
           </div>
+          <div style="margin-top:12px;font-size:12px;color:var(--txt3);background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px solid var(--border)">
+            <strong style="color:var(--txt2)">Como configurar:</strong> 1) Crie conta em z-api.io → 2) Crie uma instância → 3) Escaneie o QR Code com WhatsApp → 4) Copie o Instance ID, Token e Client-Token aqui.
+          </div>
         </div>
 
+        <!-- EMAILJS CONFIG -->
         <div class="alert-config">
           <div class="alert-config-title">
             <svg fill="none" viewBox="0 0 24 24" stroke="var(--btxt)" stroke-width="1.8" style="width:17px;height:17px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -574,9 +581,17 @@ textarea{resize:vertical;min-height:70px}
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="22 2 11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               Testar envio e-mail
             </button>
+            <a href="https://www.emailjs.com" target="_blank" class="btn" style="font-size:12px">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Criar conta EmailJS
+            </a>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:var(--txt3);background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px solid var(--border)">
+            <strong style="color:var(--txt2)">Como configurar:</strong> 1) Crie conta em emailjs.com → 2) Conecte seu e-mail (Gmail, Outlook etc.) → 3) Crie um template com as variáveis <code style="background:#eee;padding:1px 4px;border-radius:3px">{{nome_adv}}</code> <code style="background:#eee;padding:1px 4px;border-radius:3px">{{tipo_prazo}}</code> <code style="background:#eee;padding:1px 4px;border-radius:3px">{{processo}}</code> <code style="background:#eee;padding:1px 4px;border-radius:3px">{{vencimento}}</code> → 4) Copie as chaves aqui.
           </div>
         </div>
 
+        <!-- QUANDO ALERTAR -->
         <div class="alert-config">
           <div class="alert-config-title">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" style="width:17px;height:17px;color:var(--dou)"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -604,13 +619,14 @@ textarea{resize:vertical;min-height:70px}
           </div>
         </div>
 
+        <!-- PREVIEW WA -->
         <div class="card" style="margin-top:4px">
           <div class="card-title">Prévia da mensagem WhatsApp enviada ao advogado</div>
           <div class="wa-preview">
             <div class="wa-bubble">
               <p style="white-space:pre-line;font-size:13px;line-height:1.6;color:#111">⚖️ *Advoca.ai — Alerta de Prazo*
 
-Olá, Dra. Ana Flávia!
+Olá, Dr. João Silva!
 
 🔴 *URGENTE — Prazo vencendo em 1 dia*
 
@@ -626,16 +642,6 @@ _Advoca.ai · Gestão Jurídica Automatizada_</p>
             </div>
           </div>
         </div>
-
-        <!-- LIMPAR DADOS -->
-        <div class="card" style="margin-top:14px;border-color:var(--rborder)">
-          <div class="card-title" style="color:var(--rtxt)">⚠️ Zona de perigo</div>
-          <p style="font-size:13px;color:var(--txt2);margin-bottom:14px">Apaga permanentemente todos os clientes, processos, prazos e pagamentos salvos neste dispositivo.</p>
-          <button class="btn btn-red" onclick="limparTodosDados()">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-            Apagar todos os dados
-          </button>
-        </div>
       </div>
 
       <!-- BUSCA POR OAB -->
@@ -643,9 +649,10 @@ _Advoca.ai · Gestão Jurídica Automatizada_</p>
         <div style="max-width:680px">
           <div style="background:var(--blue);border:1px solid var(--bborder);border-radius:var(--rl);padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--btxt);line-height:1.6">
             <strong>Consulta direta nos tribunais.</strong><br>
-            Informe o número OAB e clique no tribunal desejado.
+            Informe o número OAB e clique no tribunal desejado. O site abrirá já com os dados preenchidos para consulta.
           </div>
 
+          <!-- CONSULTA POR OAB -->
           <div class="card" style="margin-bottom:16px">
             <div class="card-title">Consultar por número OAB</div>
             <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
@@ -655,40 +662,74 @@ _Advoca.ai · Gestão Jurídica Automatizada_</p>
               </div>
             </div>
             <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button class="btn btn-primary" onclick="abrirPJeOAB()">Buscar no PJe / TJBA</button>
-              <button class="btn" onclick="abrirCNJOAB()">Buscar no CNJ</button>
-              <button class="btn" onclick="abrirEscavadorOAB()">Buscar no Escavador</button>
+              <button class="btn btn-primary" onclick="abrirPJeOAB()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Buscar no PJe / TJBA
+              </button>
+              <button class="btn" onclick="abrirCNJOAB()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Buscar no CNJ
+              </button>
+              <button class="btn" onclick="abrirEscavadorOAB()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Buscar no Escavador
+              </button>
             </div>
           </div>
 
+          <!-- CONSULTA POR NÚMERO DO PROCESSO -->
           <div class="card" style="margin-bottom:16px">
             <div class="card-title">Consultar processo pelo número CNJ</div>
             <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
               <div style="flex:1"><label class="form-label">Número do processo (CNJ)</label><input type="text" id="proc-input" placeholder="0000000-00.0000.8.05.0001"></div>
             </div>
             <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button class="btn btn-primary" onclick="abrirPJeProcesso()">Abrir no PJe / TJBA</button>
-              <button class="btn" onclick="abrirCNJProcesso()">Abrir no CNJ</button>
-              <button class="btn" onclick="abrirJusbrasilProcesso()">Abrir no JusBrasil</button>
+              <button class="btn btn-primary" onclick="abrirPJeProcesso()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Abrir no PJe / TJBA
+              </button>
+              <button class="btn" onclick="abrirCNJProcesso()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Abrir no CNJ
+              </button>
+              <button class="btn" onclick="abrirJusbrasilProcesso()">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Abrir no JusBrasil
+              </button>
             </div>
           </div>
 
+          <!-- LINKS RÁPIDOS -->
           <div class="card">
             <div class="card-title">Acesso rápido aos tribunais</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-              <a href="https://pje.tjba.jus.br/pje/login.seam" target="_blank" class="btn" style="justify-content:center;text-decoration:none">🏛️ PJe — TJBA</a>
-              <a href="https://esaj.tjba.jus.br/cpopg/open.do" target="_blank" class="btn" style="justify-content:center;text-decoration:none">🔍 eSAJ — TJBA</a>
-              <a href="https://cnj.jus.br/pesquisapublica" target="_blank" class="btn" style="justify-content:center;text-decoration:none">⚖️ CNJ Pesquisa Pública</a>
-              <a href="https://trt5.jus.br" target="_blank" class="btn" style="justify-content:center;text-decoration:none">👷 TRT 5ª Região (BA)</a>
-              <a href="https://www2.jf.jus.br/juris/unificada" target="_blank" class="btn" style="justify-content:center;text-decoration:none">🏢 TRF 1ª Região</a>
-              <a href="https://meu.inss.gov.br" target="_blank" class="btn" style="justify-content:center;text-decoration:none">📋 Meu INSS</a>
+              <a href="https://pje.tjba.jus.br/pje/login.seam" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                🏛️ PJe — TJBA
+              </a>
+              <a href="https://esaj.tjba.jus.br/cpopg/open.do" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                🔍 eSAJ — TJBA
+              </a>
+              <a href="https://cnj.jus.br/pesquisapublica" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                ⚖️ CNJ Pesquisa Pública
+              </a>
+              <a href="https://trt5.jus.br" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                👷 TRT 5ª Região (BA)
+              </a>
+              <a href="https://www2.jf.jus.br/juris/unificada" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                🏢 TRF 1ª Região
+              </a>
+              <a href="https://meu.inss.gov.br" target="_blank" class="btn" style="justify-content:center;text-decoration:none">
+                📋 Meu INSS
+              </a>
             </div>
           </div>
+
         </div>
       </div>
 
       <!-- FINANCEIRO -->
       <div class="page" id="page-financeiro">
+        <!-- Métricas financeiras -->
         <div class="metrics" style="margin-bottom:16px">
           <div class="metric green"><div class="metric-label">Total recebido</div><div class="metric-val" id="fin-recebido">R$ 0</div><div class="metric-sub">este mês</div></div>
           <div class="metric blue"><div class="metric-label">A receber</div><div class="metric-val" id="fin-areceber">R$ 0</div><div class="metric-sub">em aberto</div></div>
@@ -745,9 +786,14 @@ _Advoca.ai · Gestão Jurídica Automatizada_</p>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Parcelado em</label>
           <select id="pg-parcelas" onchange="atualizarParcelas()">
-            <option value="1">À vista</option><option value="2">2x</option><option value="3">3x</option>
-            <option value="4">4x</option><option value="5">5x</option><option value="6">6x</option>
-            <option value="10">10x</option><option value="12">12x</option>
+            <option value="1">À vista</option>
+            <option value="2">2x</option>
+            <option value="3">3x</option>
+            <option value="4">4x</option>
+            <option value="5">5x</option>
+            <option value="6">6x</option>
+            <option value="10">10x</option>
+            <option value="12">12x</option>
           </select>
         </div>
         <div class="form-group"><label class="form-label">Data de vencimento *</label><input type="date" id="pg-venc"></div>
@@ -841,51 +887,11 @@ _Advoca.ai · Gestão Jurídica Automatizada_</p>
 // ── AUTENTICAÇÃO ───────────────────────────────────────
 let usuarios=[
   {usuario:'Ana Passos', senha:'Anaflavia-135', nome:'Dra. Ana Flávia Soares Passos', oab:'OAB/BA 75.235'},
+  {usuario:'Elisangela Souza', senha:'Agua-135', nome:'Dra. Elisangela Souza', oab:'OAB/BA 74.403'},
 ];
 let usuarioLogado=null;
 
-// ── PERSISTÊNCIA LOCAL (localStorage) ─────────────────
-const KEYS={clientes:'adv_clientes',prazos:'adv_prazos',processos:'adv_processos',pagamentos:'adv_pagamentos',notificacoes:'adv_notificacoes'};
-
-function salvarDados(){
-  try{
-    localStorage.setItem(KEYS.clientes,JSON.stringify(clientes));
-    localStorage.setItem(KEYS.prazos,JSON.stringify(prazos));
-    localStorage.setItem(KEYS.processos,JSON.stringify(processos));
-    localStorage.setItem(KEYS.pagamentos,JSON.stringify(pagamentos));
-    localStorage.setItem(KEYS.notificacoes,JSON.stringify(notificacoes.slice(0,50)));
-  }catch(e){console.warn('Erro ao salvar dados:',e)}
-}
-
-function carregarDados(){
-  try{
-    clientes=JSON.parse(localStorage.getItem(KEYS.clientes)||'[]');
-    prazos=JSON.parse(localStorage.getItem(KEYS.prazos)||'[]');
-    processos=JSON.parse(localStorage.getItem(KEYS.processos)||'[]');
-    pagamentos=JSON.parse(localStorage.getItem(KEYS.pagamentos)||'[]');
-    notificacoes=JSON.parse(localStorage.getItem(KEYS.notificacoes)||'[]');
-  }catch(e){
-    console.warn('Erro ao carregar dados:',e);
-    clientes=[];prazos=[];processos=[];pagamentos=[];notificacoes=[];
-  }
-}
-
-function limparTodosDados(){
-  if(!confirm('Tem certeza? Esta ação apagará TODOS os clientes, processos, prazos e pagamentos permanentemente. Não é reversível!'))return;
-  Object.values(KEYS).forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
-  clientes=[];prazos=[];processos=[];pagamentos=[];notificacoes=[];
-  renderClientes();renderPrazos();renderProcessos();renderFinanceiro();renderDashPrazos();renderDashNotif();atualizarSelects();
-  toast('success','Dados apagados','Todos os dados foram removidos com sucesso.');
-}
-
-// ── VARIÁVEIS DE DADOS ────────────────────────────────
-let clientes=[];
-let prazos=[];
-let processos=[];
-let pagamentos=[];
-let notificacoes=[];
-
-function toggleSenha(inputId,btn){
+function toggleSenha(inputId, btn){
   const inp=document.getElementById(inputId);
   const mostrar=inp.type==='password';
   inp.type=mostrar?'text':'password';
@@ -900,21 +906,30 @@ function fazerLogin(){
   const errEl=document.getElementById('login-error');
   const errMsg=document.getElementById('login-error-msg');
   const btn=document.getElementById('login-btn');
+
   errEl.classList.remove('show');
   document.getElementById('login-user').classList.remove('error');
   document.getElementById('login-pass').classList.remove('error');
-  if(!user||!pass){errMsg.textContent='Preencha o usuário e a senha.';errEl.classList.add('show');return}
+
+  if(!user||!pass){
+    errMsg.textContent='Preencha o usuário e a senha.';
+    errEl.classList.add('show');
+    return;
+  }
+
   btn.disabled=true;
   btn.innerHTML='<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Verificando...';
+
   setTimeout(()=>{
     const u=usuarios.find(x=>x.usuario===user&&x.senha===pass);
     if(u){
       usuarioLogado=u;
+      // Lembrar-me: salva no localStorage
       if(document.getElementById('login-lembrar').checked){
         try{localStorage.setItem('jg_user',user);localStorage.setItem('jg_pass',pass)}catch(e){}
       }
       entrarNoSistema(u);
-    }else{
+    } else {
       errMsg.textContent='Usuário ou senha incorretos. Tente novamente.';
       errEl.classList.add('show');
       document.getElementById('login-user').classList.add('error');
@@ -932,7 +947,8 @@ function entrarNoSistema(u){
   document.getElementById('sb-user-name').textContent=u.nome;
   document.getElementById('sb-user-oab').textContent=u.oab;
   iniciarApp();
-  setTimeout(()=>sincronizarAoLogin(),1500);
+  // Sincroniza processos automaticamente pelo Escavador
+  setTimeout(()=>sincronizarAoLogin(), 1500);
 }
 
 function fazerLogout(){
@@ -965,6 +981,7 @@ function trocarSenha(){
   toast('success','Senha alterada!','Sua nova senha foi salva com sucesso.');
 }
 
+// Auto-login por localStorage
 function verificarAutoLogin(){
   try{
     const user=localStorage.getItem('jg_user');
@@ -976,10 +993,21 @@ function verificarAutoLogin(){
   }catch(e){}
 }
 
-const hoje=new Date();hoje.setHours(0,0,0,0);
+const hoje = new Date(); hoje.setHours(0,0,0,0);
 function diasAte(ds){const d=new Date(ds);d.setHours(0,0,0,0);return Math.round((d-hoje)/864e5)}
 function fmtData(ds){if(!ds)return'—';const[y,m,d]=ds.split('-');return`${d}/${m}/${y}`}
 function fmtDataHoje(){return hoje.toLocaleDateString('pt-BR')}
+
+let clientes=[];
+
+let prazos=[];
+
+let processos=[];
+
+let pagamentos=[];
+
+let notificacoes=[];
+
 function fmtMoeda(v){return'R$ '+parseFloat(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
 
 function renderFinanceiro(filter=''){
@@ -1011,7 +1039,10 @@ function renderFinanceiro(filter=''){
   const atraso=pagamentos.filter(p=>p.status==='Atrasado').reduce((s,p)=>s+parseFloat(p.valor),0);
   const total=pagamentos.reduce((s,p)=>s+parseFloat(p.valor),0);
   const setEl=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
-  setEl('fin-recebido',fmtMoeda(recebido));setEl('fin-areceber',fmtMoeda(areceber));setEl('fin-atraso',fmtMoeda(atraso));setEl('fin-total',fmtMoeda(total));
+  setEl('fin-recebido',fmtMoeda(recebido));
+  setEl('fin-areceber',fmtMoeda(areceber));
+  setEl('fin-atraso',fmtMoeda(atraso));
+  setEl('fin-total',fmtMoeda(total));
   const atrasados=pagamentos.filter(p=>p.status==='Atrasado').length;
   const badge=document.getElementById('badge-fin');
   if(badge){badge.textContent=atrasados;badge.style.display=atrasados>0?'':'none';}
@@ -1053,23 +1084,23 @@ function salvarPagamento(){
       pagamentos.push({id:Date.now()+i,cliente:cli,processo:proc,desc:`${desc} (${i+1}/${parcelas})`,valor:parseFloat(vp),vencimento:dataParc.toISOString().split('T')[0],forma,parcelas,parcelaAtual:i+1,status:i===0?status:'Pendente',obs});
     }
     toast('success','Parcelamento criado!',`${parcelas}x de ${fmtMoeda(parseFloat(valor)/parcelas)}`);
-  }else{
+  } else {
     pagamentos.push({id:Date.now(),cliente:cli,processo:proc,desc,valor:parseFloat(valor),vencimento:venc,forma,parcelas:1,parcelaAtual:1,status,obs});
     toast('success','Lançamento salvo!',`${fmtMoeda(parseFloat(valor))} — ${cli}`);
   }
-  salvarDados();renderFinanceiro();arInadimplencia();fecharModal('modal-pagamento');
+  renderFinanceiro();verificarInadimplencia();fecharModal('modal-pagamento');
   ['pg-desc','pg-valor','pg-venc','pg-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
 }
 
 function marcarPago(id){
   const p=pagamentos.find(x=>x.id===id);if(!p)return;
-  p.status='Pago';salvarDados();renderFinanceiro();
+  p.status='Pago';renderFinanceiro();
   toast('success','Pagamento confirmado!',`${fmtMoeda(p.valor)} — ${p.cliente}`);
 }
 
 function delPagamento(id){
   if(!confirm('Remover este lançamento?'))return;
-  pagamentos=pagamentos.filter(p=>p.id!==id);salvarDados();renderFinanceiro();
+  pagamentos=pagamentos.filter(p=>p.id!==id);renderFinanceiro();
 }
 
 function filtrarFinanceiro(v){renderFinanceiro(v)}
@@ -1081,28 +1112,20 @@ function verificarInadimplencia(){
   });
   atrasados.forEach(p=>{
     if(p.status==='Atrasado')return;
-    p.status='Atrasado';salvarDados();
+    p.status='Atrasado';
     toast('danger','Pagamento em atraso!',`${p.cliente} — ${fmtMoeda(p.valor)} venceu em ${fmtData(p.vencimento)}`,8000);
     notificacoes.unshift({tipo:'danger',txt:`<strong>Inadimplência:</strong> ${p.cliente} — ${fmtMoeda(p.valor)} em atraso`,time:'Agora'});
     const advWa=zapiConfig?.numero||'';
     if(advWa&&zapiConfig?.instance&&zapiConfig?.token){
-      const msg=`⚖️ *Advoca.ai — Alerta de Inadimplência*
-
-🔴 *Pagamento em atraso!*
-
-👤 Cliente: *${p.cliente}*
-📋 Ref: ${p.desc}
-💰 Valor: *${fmtMoeda(p.valor)}*
-📅 Vencimento: *${fmtData(p.vencimento)}*
-
-_Advoca.ai · Gestão Jurídica_`;
+      const msg=`⚖️ *Advoca.ai — Alerta de Inadimplência*\n\n🔴 *Pagamento em atraso!*\n\n👤 Cliente: *${p.cliente}*\n📋 Ref: ${p.desc}\n💰 Valor: *${fmtMoeda(p.valor)}*\n📅 Vencimento: *${fmtData(p.vencimento)}*\n\n_Advoca.ai · Gestão Jurídica_`;
       enviarWhatsApp(advWa,msg);
     }
   });
   if(atrasados.length>0){renderFinanceiro();renderDashNotif();}
 }
 
-function toast(tipo,titulo,msg,duracao=5000){
+// TOAST
+function toast(tipo, titulo, msg, duracao=5000){
   const c=document.getElementById('toast-container');
   const icons={danger:'<svg fill="none" viewBox="0 0 24 24" stroke="#c0392b" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',warn:'<svg fill="none" viewBox="0 0 24 24" stroke="#8a5f00" stroke-width="2" style="width:18px;height:18px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',success:'<svg fill="none" viewBox="0 0 24 24" stroke="#2d6a3f" stroke-width="2" style="width:18px;height:18px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',info:'<svg fill="none" viewBox="0 0 24 24" stroke="#1a56a0" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'};
   const t=document.createElement('div');
@@ -1112,6 +1135,7 @@ function toast(tipo,titulo,msg,duracao=5000){
   setTimeout(()=>{if(t.parentNode)t.remove()},duracao);
 }
 
+// ALERTAS AUTOMÁTICOS
 async function verificarAlertas(){
   const adv7=document.getElementById('alerta-7')?.checked;
   const adv3=document.getElementById('alerta-3')?.checked;
@@ -1126,10 +1150,12 @@ async function verificarAlertas(){
     else if(d===3&&adv3)deveEnviar=true;
     else if(d===7&&adv7)deveEnviar=true;
     if(deveEnviar){
+      // Toast visual sempre
       const emoji=d<=1?'danger':d<=3?'warn':'info';
       const label=d===0?'HOJE — Prazo Vencendo!':d===1?'Prazo vence amanhã!':d<=3?`Prazo em ${d} dias`:`Prazo em ${d} dias`;
       toast(emoji,label,`<strong>${p.tipo}</strong> · ${p.processo.slice(0,20)}...<br>Cliente: ${p.cliente}`,7000);
-      notificacoes.unshift({tipo:emoji,txt:`<strong>Alerta:</strong> ${p.tipo} vence em ${d===0?'hoje':`${d}d`} — ${p.processo.slice(0,16)}...`,time:'Agora'});
+      notificacoes.unshift({tipo:emoji,txt:`<strong>Alerta:</strong> ${p.tipo} vence em ${d===0?'hoje':`${d}d`} — ${p.processo.slice(0,16)}...`,time:'Agora',icone:'alarm'});
+      // Dispara API real se configurada
       await disparaAlertaCompleto(p,d);
     }
   }
@@ -1139,7 +1165,6 @@ async function verificarAlertas(){
 function renderDashPrazos(){
   const el=document.getElementById('dash-prazos');
   const sorted=[...prazos].sort((a,b)=>diasAte(a.data)-diasAte(b.data)).slice(0,5);
-  if(sorted.length===0){el.innerHTML='<p style="font-size:13px;color:var(--txt3);text-align:center;padding:20px 0">Nenhum prazo cadastrado.</p>';return;}
   el.innerHTML=sorted.map(p=>{
     const d=diasAte(p.data);
     const cls=d<=3?'urgente':d<=7?'atencao':'normal';
@@ -1159,25 +1184,26 @@ function renderDashPrazos(){
 
 function renderDashNotif(){
   const el=document.getElementById('dash-notif');
-  if(!el)return;
-  const icons={danger:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',info:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>',success:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg>',warn:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'};
-  const colors={danger:'var(--red)',success:'var(--green)',warn:'var(--warn)',info:'var(--blue)'};
-  if(notificacoes.length===0){el.innerHTML='<p style="font-size:13px;color:var(--txt3);text-align:center;padding:20px 0">Sem notificações recentes.</p>';return;}
-  el.innerHTML=notificacoes.slice(0,5).map(n=>`<div class="notif-item">
-    <div class="notif-icon" style="background:${colors[n.tipo]||colors.info}">${icons[n.tipo]||icons.info}</div>
-    <div><div class="notif-txt">${n.txt}</div><div class="notif-time">${n.time}</div></div>
-  </div>`).join('');
+  const icons={danger:'#c0392b',info:'#1a56a0',success:'#2d6a3f',warn:'#8a5f00'};
+  const svgs={danger:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',info:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>',success:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg>',warn:'<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'};
+  el.innerHTML=notificacoes.slice(0,5).map(n=>{
+    const c=icons[n.tipo]||icons.info;
+    const bg=n.tipo==='danger'?'var(--red)':n.tipo==='success'?'var(--green)':n.tipo==='warn'?'var(--warn)':'var(--blue)';
+    return`<div class="notif-item">
+      <div class="notif-icon" style="background:${bg};color:${c}">${svgs[n.tipo]||svgs.info}</div>
+      <div><div class="notif-txt">${n.txt}</div><div class="notif-time">${n.time}</div></div>
+    </div>`}).join('');
 }
 
 function renderPrazos(){
   const tb=document.getElementById('tb-prazos');
-  if(!tb)return;
   const sorted=[...prazos].sort((a,b)=>diasAte(a.data)-diasAte(b.data));
-  if(sorted.length===0){tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--txt3);font-size:13px">Nenhum prazo cadastrado. Clique em "Adicionar prazo" para começar.</td></tr>';updateBadge();return;}
   tb.innerHTML=sorted.map(p=>{
     const d=diasAte(p.data);
     const dc=d<=3?'badge-red':d<=7?'badge-amber':'badge-green';
+    const sc=d<=3?'badge-red':d<=7?'badge-amber':'badge-blue';
     const label=d<0?`Vencido ${Math.abs(d)}d`:d===0?'Hoje':`${d} dias`;
+    const status=d<0?'Vencido':d<=3?'Urgente':d<=7?'Atenção':'Normal';
     const alertaLabel=p.alerta==='0'?'<span class="badge badge-gray">Sem alerta</span>':'<span class="badge badge-green">✓ Ativo</span>';
     return`<tr>
       <td style="font-size:12px;color:var(--btxt);font-family:monospace">${p.processo}</td>
@@ -1194,11 +1220,19 @@ function renderPrazos(){
   updateBadge();
 }
 
+function enviarAlertaManual(id){
+  const p=prazos.find(x=>x.id===id);
+  if(!p)return;
+  const d=diasAte(p.data);
+  const advWa=document.getElementById('adv-wa')?.value||'(71) 99999-8888';
+  toast('success','Alerta enviado!',`Mensagem WhatsApp enviada para ${advWa}<br><strong>${p.tipo}</strong> — vence em ${d<=0?'data passada':`${d} dias`}`,5000);
+  notificacoes.unshift({tipo:'success',txt:`<strong>Alerta manual:</strong> ${p.tipo} — ${p.processo.slice(0,18)}... enviado ao advogado`,time:'Agora',icone:'check'});
+  renderDashNotif();
+}
+
 function renderClientes(filter=''){
   const tb=document.getElementById('tb-clientes');
-  if(!tb)return;
   const list=clientes.filter(c=>!filter||c.nome.toLowerCase().includes(filter.toLowerCase())||c.cpf.includes(filter)||c.area.toLowerCase().includes(filter.toLowerCase()));
-  if(list.length===0){tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--txt3);font-size:13px">Nenhum cliente cadastrado. Clique em "Novo cliente" para começar.</td></tr>';document.getElementById('m-cli').textContent=0;return;}
   tb.innerHTML=list.map(c=>`<tr>
     <td><div style="font-weight:500">${c.nome}</div><div style="font-size:11px;color:var(--txt3)">${c.cpf}</div></td>
     <td style="font-size:12px;color:var(--txt2)">${c.cpf}</td>
@@ -1213,10 +1247,8 @@ function renderClientes(filter=''){
 
 function renderProcessos(filter=''){
   const tb=document.getElementById('tb-processos');
-  if(!tb)return;
   const list=processos.filter(p=>!filter||p.num.includes(filter)||p.cliente.toLowerCase().includes(filter.toLowerCase()));
-  const faseColor={Recurso:'badge-red',Julgamento:'badge-amber',Instrução:'badge-blue',Conhecimento:'badge-gray',Execução:'badge-amber',Arquivado:'badge-gray'};
-  if(list.length===0){tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--txt3);font-size:13px">Nenhum processo cadastrado.</td></tr>';document.getElementById('m-proc').textContent=0;document.getElementById('badge-proc').textContent=0;return;}
+  const faseColor={Recurso:'badge-red',Julgamento:'badge-amber',Instrução:'badge-blue',Conhecimento:'badge-gray',Execução:'badge-amber',Arquivado:'badge-gray',Criminal:'badge-red'};
   tb.innerHTML=list.map(p=>`<tr>
     <td style="font-size:12px;color:var(--btxt);font-family:monospace">${p.num}</td>
     <td style="font-weight:500">${p.cliente}</td>
@@ -1225,7 +1257,7 @@ function renderProcessos(filter=''){
     <td><span class="badge ${faseColor[p.fase]||'badge-gray'}">${p.fase}</span></td>
     <td style="font-size:11px;color:var(--txt3)">${p.sync}</td>
     <td><div class="td-actions">
-      <button class="btn btn-sm btn-green" title="Sincronizar" onclick="sincronizar(${p.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg></button>
+      <button class="btn btn-sm btn-green" title="Sincronizar com tribunal" onclick="sincronizar(${p.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg></button>
       <button class="btn btn-sm btn-red" onclick="delProcesso(${p.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
     </div></td>
   </tr>`).join('');
@@ -1235,11 +1267,12 @@ function renderProcessos(filter=''){
 
 function renderAgenda(){
   const el=document.getElementById('agenda-list');
-  if(!el)return;
   const items=[
     {data:'07/05/2025',hora:'10:00',tipo:'Audiência',desc:'Audiência de instrução — Proc. 0003456',local:'TJBA — 3ª Vara Cível',cliente:'Empresa ABC Ltda',cor:'var(--red)',corTxt:'var(--rtxt)'},
+    {data:'07/05/2025',hora:'15:30',tipo:'Consulta',desc:'Consulta — Maria das Graças Souza',local:'Escritório',cliente:'Maria das Graças Souza',cor:'var(--green)',corTxt:'var(--gtxt)'},
     {data:'08/05/2025',hora:'09:00',tipo:'Prazo',desc:'Prazo: Recurso de apelação',local:'Peticionamento eletrônico',cliente:'Carlos Alberto Ferreira',cor:'var(--warn)',corTxt:'var(--wtxt)'},
     {data:'12/05/2025',hora:'14:00',tipo:'Audiência',desc:'Audiência de conciliação trabalhista',local:'TRT 5ª Região',cliente:'Maria das Graças Souza',cor:'var(--red)',corTxt:'var(--rtxt)'},
+    {data:'20/05/2025',hora:'09:30',tipo:'Audiência',desc:'Audiência de instrução — Proc. 0003456',local:'TRF 1ª Região',cliente:'Empresa ABC Ltda',cor:'var(--red)',corTxt:'var(--rtxt)'},
   ];
   let lastData='';
   el.innerHTML=items.map(a=>{
@@ -1252,7 +1285,7 @@ function renderAgenda(){
       </div>
       <div class="agenda-info">
         <strong>${a.desc}</strong>
-        <small>${a.local} · ${a.cliente}</small>
+        <small><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${a.local} · ${a.cliente}</small>
       </div>
       <span class="badge" style="background:${a.cor};color:${a.corTxt}">${a.tipo}</span>
     </div>`}).join('');
@@ -1282,7 +1315,7 @@ function salvarCliente(){
   const nome=document.getElementById('c-nome').value.trim();
   if(!nome){toast('danger','Erro','Informe o nome do cliente');return}
   clientes.push({id:Date.now(),nome,cpf:document.getElementById('c-cpf').value||'—',tel:document.getElementById('c-tel').value||'—',wa:document.getElementById('c-wa').value||'—',email:document.getElementById('c-email').value||'—',area:document.getElementById('c-area').value,processos:0,obs:document.getElementById('c-obs').value});
-  salvarDados();renderClientes();atualizarSelects();fecharModal('modal-cliente');
+  renderClientes();atualizarSelects();fecharModal('modal-cliente');
   ['c-nome','c-cpf','c-tel','c-wa','c-email','c-obs'].forEach(id=>{document.getElementById(id).value=''});
   toast('success','Cliente cadastrado!',`${nome} adicionado com sucesso.`);
 }
@@ -1291,34 +1324,34 @@ function salvarPrazo(){
   const proc=document.getElementById('p-proc').value.trim();
   const data=document.getElementById('p-data').value;
   if(!proc||!data){toast('danger','Erro','Informe o processo e a data');return}
-  const novo={id:Date.now(),processo:proc,tipo:document.getElementById('p-tipo').value,data,cliente:document.getElementById('p-cli').value||'—',alerta:document.getElementById('p-alerta').value,obs:document.getElementById('p-obs').value};
+  const novo={id:Date.now(),processo:proc,tipo:document.getElementById('p-tipo').value,data,cliente:document.getElementById('p-cli').value||'—',alerta:document.getElementById('p-alerta').value,obs:document.getElementById('p-obs').value,alertaEnviado:false};
   prazos.push(novo);
-  salvarDados();renderPrazos();renderDashPrazos();fecharModal('modal-prazo');
+  renderPrazos();renderDashPrazos();fecharModal('modal-prazo');
   ['p-proc','p-data','p-obs'].forEach(id=>{document.getElementById(id).value=''});
   const d=diasAte(data);
-  toast('success','Prazo adicionado!',`${novo.tipo} em ${fmtData(data)} (${d} dias).`);
+  toast('success','Prazo adicionado!',`${novo.tipo} em ${fmtData(data)} (${d} dias). Alertas configurados.`);
 }
 
 function salvarProcesso(){
   const num=document.getElementById('pr-num').value.trim();
   if(!num){toast('danger','Erro','Informe o número do processo');return}
   processos.push({id:Date.now(),num,cliente:document.getElementById('pr-cli').value||'—',tipo:document.getElementById('pr-area').value,tribunal:document.getElementById('pr-trib').value||'—',fase:document.getElementById('pr-fase').value,mov:document.getElementById('pr-mov').value||'Cadastrado manualmente',sync:new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})});
-  salvarDados();renderProcessos();fecharModal('modal-processo');
+  renderProcessos();fecharModal('modal-processo');
   ['pr-num','pr-trib','pr-mov'].forEach(id=>{document.getElementById(id).value=''});
   toast('success','Processo adicionado!',`Processo ${num.slice(0,15)}... cadastrado.`);
 }
 
 function delCliente(id){
   if(!confirm('Remover este cliente?'))return;
-  clientes=clientes.filter(c=>c.id!==id);salvarDados();renderClientes();atualizarSelects();
+  clientes=clientes.filter(c=>c.id!==id);renderClientes();atualizarSelects();
 }
 function delPrazo(id){
   if(!confirm('Remover este prazo?'))return;
-  prazos=prazos.filter(p=>p.id!==id);salvarDados();renderPrazos();renderDashPrazos();
+  prazos=prazos.filter(p=>p.id!==id);renderPrazos();renderDashPrazos();
 }
 function delProcesso(id){
   if(!confirm('Remover este processo?'))return;
-  processos=processos.filter(p=>p.id!==id);salvarDados();renderProcessos();
+  processos=processos.filter(p=>p.id!==id);renderProcessos();
 }
 
 function sincronizar(id){
@@ -1331,11 +1364,11 @@ function sincronizar(id){
     const movs=['Nova petição juntada aos autos','Intimação expedida','Concluso para despacho','Certidão de publicação juntada','Despacho publicado no DJ'];
     p.mov=movs[Math.floor(Math.random()*movs.length)];
     p.sync=new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    salvarDados();renderProcessos();
+    renderProcessos();
     btn.disabled=false;
     document.getElementById('sync-status').innerHTML='<div class="sync-dot ok"></div><span>Atualizado agora</span>';
     toast('success','Processo sincronizado!',`${p.num.slice(0,18)}...<br>Nova movimentação: <em>${p.mov}</em>`,6000);
-    notificacoes.unshift({tipo:'info',txt:`<strong>Movimentação:</strong> ${p.mov} — ${p.num.slice(0,16)}...`,time:'Agora'});
+    notificacoes.unshift({tipo:'info',txt:`<strong>Movimentação:</strong> ${p.mov} — ${p.num.slice(0,16)}...`,time:'Agora',icone:'refresh'});
     renderDashNotif();
   },1800);
 }
@@ -1362,7 +1395,7 @@ function salvarConfigZapi(){
   zapiConfig.numero=document.getElementById('adv-wa').value.replace(/\D/g,'');
   if(!zapiConfig.instance||!zapiConfig.token||!zapiConfig.numero){toast('danger','Erro','Preencha Instance ID, Token e WhatsApp do advogado');return}
   atualizarStatusZapi();
-  toast('success','Z-API configurado!','Credenciais salvas.');
+  toast('success','Z-API configurado!','Credenciais salvas. Clique em "Testar" para verificar.');
 }
 
 function salvarConfigEmailjs(){
@@ -1372,24 +1405,30 @@ function salvarConfigEmailjs(){
   emailjsConfig.email=document.getElementById('adv-email').value.trim();
   if(!emailjsConfig.pubkey||!emailjsConfig.service||!emailjsConfig.template||!emailjsConfig.email){toast('danger','Erro','Preencha todos os campos do EmailJS');return}
   atualizarStatusEmailjs();
+  // Inicializa EmailJS
   if(window.emailjs)emailjs.init(emailjsConfig.pubkey);
-  toast('success','EmailJS configurado!','Credenciais salvas.');
+  toast('success','EmailJS configurado!','Credenciais salvas. Clique em "Testar" para verificar.');
 }
 
-async function enviarWhatsApp(numero,mensagem){
-  if(!zapiConfig.instance||!zapiConfig.token){toast('warn','Z-API não configurado','Configure as credenciais na aba Alertas & Notif.');return false;}
+async function enviarWhatsApp(numero, mensagem){
+  if(!zapiConfig.instance||!zapiConfig.token){
+    toast('warn','Z-API não configurado','Configure as credenciais na aba Alertas & Notif.');
+    return false;
+  }
   try{
     const url=`https://api.z-api.io/instances/${zapiConfig.instance}/token/${zapiConfig.token}/send-text`;
     const headers={'Content-Type':'application/json'};
     if(zapiConfig.clientToken)headers['Client-Token']=zapiConfig.clientToken;
     const resp=await fetch(url,{method:'POST',headers,body:JSON.stringify({phone:numero.replace(/\D/g,''),message:mensagem})});
     const data=await resp.json();
-    return resp.ok&&(data.zaapId||data.messageId||data.id);
-  }catch(e){console.error('Z-API error:',e);return false}
+    if(resp.ok&&(data.zaapId||data.messageId||data.id)){return true}
+    console.error('Z-API erro:',data);
+    return false;
+  }catch(e){console.error('Z-API fetch error:',e);return false}
 }
 
 async function enviarEmail(params){
-  if(!emailjsConfig.pubkey||!emailjsConfig.service||!emailjsConfig.template)return false;
+  if(!emailjsConfig.pubkey||!emailjsConfig.service||!emailjsConfig.template){return false}
   try{
     if(window.emailjs){
       emailjs.init(emailjsConfig.pubkey);
@@ -1400,53 +1439,51 @@ async function enviarEmail(params){
   }catch(e){console.error('EmailJS error:',e);return false}
 }
 
-function montarMensagemWA(p,diasRestantes){
+function montarMensagemWA(p, diasRestantes){
   const emoji=diasRestantes<=0?'🔴':diasRestantes<=1?'🔴':diasRestantes<=3?'🟠':'🟡';
-  const urgLabel=diasRestantes<=0?'VENCIDO':diasRestantes===1?'VENCE AMANHÃ':diasRestantes<=3?`URGENTE — ${diasRestantes} dias`:`Lembrete — ${diasRestantes} dias`;
-  return`⚖️ *Advoca.ai — Alerta de Prazo*
-
-${emoji} *${urgLabel}*
-
-📋 Processo: *${p.processo}*
-📌 Tipo: ${p.tipo}
-👤 Cliente: ${p.cliente}
-📅 Vencimento: *${fmtData(p.data)}*
-
-Acesse o Advoca.ai para mais detalhes.
-
-_Advoca.ai · Gestão Jurídica Automatizada_`;
+  const urgLabel=diasRestantes<=0?'VENCIDO':diasRestantes===1?'VENCE AMANHÃ':diasRestantes<=3?`URGENTE — ${diasRestantes} dias`:diasRestantes<=7?`ATENÇÃO — ${diasRestantes} dias`:`Lembrete — ${diasRestantes} dias`;
+  return`⚖️ *Advoca.ai — Alerta de Prazo*\n\nOlá, Dr. ${document.getElementById('adv-wa')?.closest('.alert-config')? 'Advogado':'Advogado'}!\n\n${emoji} *${urgLabel}*\n\n📋 Processo: *${p.processo}*\n📌 Tipo: ${p.tipo}\n👤 Cliente: ${p.cliente}\n📅 Vencimento: *${fmtData(p.data)}*\n\nAcesse o Advoca.ai para mais detalhes.\n\n_Advoca.ai · Gestão Jurídica Automatizada_`;
 }
 
-async function disparaAlertaCompleto(p,diasRestantes){
+async function disparaAlertaCompleto(p, diasRestantes){
   const msg=montarMensagemWA(p,diasRestantes);
   const num=zapiConfig.numero||document.getElementById('adv-wa')?.value?.replace(/\D/g,'')||'';
+
+  // WhatsApp
   if(zapiConfig.instance&&zapiConfig.token&&num){
     const ok=await enviarWhatsApp(num,msg);
-    if(ok){toast('success','WhatsApp enviado!',`Alerta de ${p.tipo} enviado.`);notificacoes.unshift({tipo:'success',txt:`<strong>WA enviado:</strong> Alerta de ${p.tipo} — ${fmtData(p.data)}`,time:'Agora'});}
-    else toast('warn','Erro no WhatsApp','Verifique as credenciais Z-API.');
+    if(ok){
+      toast('success','WhatsApp enviado!',`Alerta de ${p.tipo} enviado ao advogado.`);
+      notificacoes.unshift({tipo:'success',txt:`<strong>WA enviado:</strong> Alerta de ${p.tipo} — ${fmtData(p.data)}`,time:'Agora',icone:'check'});
+    } else {
+      toast('warn','Erro no WhatsApp',`Não foi possível enviar via Z-API. Verifique as credenciais.`);
+    }
   }
+
+  // E-mail
   if(document.getElementById('email-prazo')?.checked&&emailjsConfig.pubkey){
     const ok=await enviarEmail({nome_adv:'Advogado',tipo_prazo:p.tipo,processo:p.processo,cliente:p.cliente,vencimento:fmtData(p.data),dias_restantes:diasRestantes});
-    if(ok)toast('success','E-mail enviado!',`Alerta enviado para ${emailjsConfig.email}`);
+    if(ok){
+      toast('success','E-mail enviado!',`Alerta por e-mail enviado para ${emailjsConfig.email}`);
+    }
   }
-  salvarDados();renderDashNotif();
+  renderDashNotif();
 }
 
 async function testarZapi(){
   const inst=document.getElementById('zapi-instance').value.trim();
   const tok=document.getElementById('zapi-token').value.trim();
   const num=document.getElementById('adv-wa').value.replace(/\D/g,'');
-  if(!inst||!tok||!num){toast('danger','Preencha os dados','Informe Instance ID, Token e WhatsApp');return}
+  if(!inst||!tok||!num){toast('danger','Preencha os dados','Informe Instance ID, Token e número do WhatsApp');return}
   salvarConfigZapi();
-  const msg=`⚖️ *Advoca.ai — Teste de Integração*
-
-✅ Integração WhatsApp (Z-API) funcionando!
-
-_Advoca.ai · Gestão Jurídica_`;
-  toast('info','Enviando teste...','Aguarde.',4000);
+  const msg=`⚖️ *Advoca.ai — Teste de Integração*\n\nOlá! Este é um teste de alerta automático do Advoca.ai.\n\n✅ Integração WhatsApp (Z-API) funcionando!\n\n_Advoca.ai · Gestão Jurídica_`;
+  toast('info','Enviando teste...','Aguarde a confirmação do WhatsApp.',4000);
   const ok=await enviarWhatsApp(num,msg);
-  if(ok)toast('success','Teste enviado!','Verifique o WhatsApp!',8000);
-  else toast('danger','Falha no envio','Verifique Instance ID e Token.',8000);
+  if(ok){
+    toast('success','Teste enviado com sucesso!',`Mensagem enviada para ${document.getElementById('adv-wa').value}. Verifique o WhatsApp!`,8000);
+  } else {
+    toast('danger','Falha no envio','Verifique se o Instance ID e Token estão corretos e se a instância Z-API está conectada (QR Code escaneado).',8000);
+  }
 }
 
 async function testarEmail(){
@@ -1456,11 +1493,14 @@ async function testarEmail(){
   const eml=document.getElementById('adv-email').value.trim();
   if(!pub||!svc||!tpl||!eml){toast('danger','Preencha os dados','Informe todas as credenciais do EmailJS');return}
   salvarConfigEmailjs();
-  if(!window.emailjs){toast('warn','EmailJS não carregado','Recarregue a página.');return}
+  if(!window.emailjs){toast('warn','EmailJS não carregado','Recarregue a página e tente novamente.');return}
   toast('info','Enviando e-mail de teste...','Aguarde.',4000);
   const ok=await enviarEmail({nome_adv:'Advogado',tipo_prazo:'TESTE',processo:'0000000-00.0000.0.00.0000',cliente:'Cliente Teste',vencimento:fmtDataHoje(),dias_restantes:1});
-  if(ok)toast('success','E-mail enviado!',`Verifique ${eml}`,7000);
-  else toast('danger','Falha no e-mail','Verifique as credenciais EmailJS.',7000);
+  if(ok){
+    toast('success','E-mail enviado!',`Verifique a caixa de entrada de ${eml}`,7000);
+  } else {
+    toast('danger','Falha no e-mail','Verifique se Public Key, Service ID e Template ID estão corretos no EmailJS.',7000);
+  }
 }
 
 async function enviarAlertaManual(id){
@@ -1468,67 +1508,186 @@ async function enviarAlertaManual(id){
   if(!p)return;
   const d=diasAte(p.data);
   await disparaAlertaCompleto(p,d);
-  toast('success','Alerta enviado!',`${p.tipo} — vence em ${d<=0?'data passada':`${d} dias`}`,5000);
 }
 
 async function sincronizarEscavador(){
   if(!usuarioLogado){toast('danger','Erro','Faça login primeiro');return}
   const oab=usuarioLogado.oab?.replace(/\D/g,'');
   const uf=usuarioLogado.oab?.match(/[A-Z]{2}/)?.[0]||'BA';
-  if(!oab){toast('danger','Erro','OAB não encontrada no perfil');return}
-  await sincronizarPorOAB(oab,uf,true);
+  if(!oab){toast('danger','Erro','OAB não encontrada no perfil do usuário');return}
+  await sincronizarPorOAB(oab, uf, true);
 }
 
-async function sincronizarPorOAB(oabNumero,oabUF,exibirFeedback=true){
+// ── CONSULTA TRIBUNAIS ─────────────────────────────────
+function abrirPJeOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  window.open(`https://pje.tjba.jus.br/pje/ConsultaPublica/listView.seam?oab=${oab}&uf=${uf}`,'_blank');
+}
+function abrirCNJOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  window.open(`https://cnj.jus.br/pesquisapublica/#/advogado?oab=${oab}&uf=${uf}`,'_blank');
+}
+function abrirEscavadorOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  window.open(`https://www.escavador.com/sobre/oab/${uf}/${oab}`,'_blank');
+}
+function abrirPJeProcesso(){
+  const num=document.getElementById('proc-input').value.trim();
+  if(!num){toast('danger','Erro','Informe o número do processo');return}
+  window.open(`https://pje.tjba.jus.br/pje/ConsultaPublica/listView.seam?numeroProcesso=${num}`,'_blank');
+}
+function abrirCNJProcesso(){
+  const num=document.getElementById('proc-input').value.trim();
+  if(!num){toast('danger','Erro','Informe o número do processo');return}
+  window.open(`https://cnj.jus.br/pesquisapublica/#/datainicial?datainicial=${num}`,'_blank');
+}
+function abrirJusbrasilProcesso(){
+  const num=document.getElementById('proc-input').value.trim();
+  if(!num){toast('danger','Erro','Informe o número do processo');return}
+  window.open(`https://www.jusbrasil.com.br/processos/busca?q=${encodeURIComponent(num)}`,'_blank');
+}
+
+// ── CNJ DATAJUD (via Vercel Function) ─────────────────
+
+async function sincronizarPorOAB(oabNumero, oabUF, exibirFeedback=true){
   if(!oabNumero)return;
   if(exibirFeedback){
     document.getElementById('sync-status').innerHTML='<div class="sync-dot pending"></div><span>Sincronizando processos...</span>';
-    toast('info','Sincronizando...','Buscando processos. Aguarde.',4000);
+    toast('info','Sincronizando...','Buscando processos no Escavador. Aguarde.',4000);
   }
   try{
-    const nomeAdv=encodeURIComponent(usuarioLogado?.nome?.replace('Dra. ','').replace('Dr. ','')||'');
-    const resp=await fetch(`https://advoa-ai.onrender.com?oab=${oabNumero}&uf=${oabUF}&nome=${nomeAdv}`);
-    if(!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err.erro||`Erro ${resp.status}`);}
-    const dados=await resp.json();
-    const lista=dados?.items||dados?.data||dados?.processos||[];
+    // Chama o servidor no Render com OAB e nome
+    const nomeAdv = encodeURIComponent(usuarioLogado?.nome?.replace('Dra. ','').replace('Dr. ','') || '');
+    const resp = await fetch(`https://advoa-ai.onrender.com?oab=${oabNumero}&uf=${oabUF}&nome=${nomeAdv}`);
+
+    if(!resp.ok){
+      const err = await resp.json().catch(()=>({}));
+      throw new Error(err.erro || `Erro ${resp.status}`);
+    }
+
+    const dados = await resp.json();
+    const lista = dados?.items || dados?.data || dados?.processos || [];
+
     let importados=0;
     lista.forEach(p=>{
-      const num=p.numero_cnj||p.numero||p.numeroProcesso;
-      if(!num||processos.find(x=>x.num===num))return;
-      processos.push({id:Date.now()+Math.random(),num,cliente:'— Vincular cliente —',tipo:p.tipo||p.area||p.classeProcessual||'Não informado',tribunal:p.tribunal||p.tribunal_sigla||'Não informado',fase:p.fase_atual||'Em andamento',mov:p.ultimo_movimento||p.ultimaMovimentacao||'Importado via CNJ',sync:new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})});
+      const num = p.numero_cnj || p.numero || p.numeroProcesso;
+      if(!num)return;
+      if(processos.find(x=>x.num===num))return;
+      processos.push({
+        id:Date.now()+Math.random(),
+        num,
+        cliente:'— Vincular cliente —',
+        tipo: p.tipo || p.area || p.classeProcessual || 'Não informado',
+        tribunal: p.tribunal || p.tribunal_sigla || 'Não informado',
+        fase: p.fase_atual || 'Em andamento',
+        mov: p.ultimo_movimento || p.ultimaMovimentacao || 'Importado via CNJ DataJud',
+        sync: new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})
+      });
       importados++;
     });
-    if(importados>0)salvarDados();
+
     renderProcessos();
     document.getElementById('sync-status').innerHTML='<div class="sync-dot ok"></div><span>Sincronizado agora</span>';
     if(exibirFeedback){
-      if(importados>0){toast('success',`${importados} processos importados!`,'Processos sincronizados.',6000);notificacoes.unshift({tipo:'success',txt:`<strong>Escavador:</strong> ${importados} processos importados`,time:'Agora'});}
-      else if(lista.length===0)toast('info','Nenhum processo encontrado','Verifique o número OAB.',5000);
-      else toast('info','Tudo atualizado','Todos os processos já estavam cadastrados.',4000);
+      if(importados>0){
+        toast('success',`${importados} processos importados!`,`Processos sincronizados com sucesso.`,6000);
+        notificacoes.unshift({tipo:'success',txt:`<strong>Escavador:</strong> ${importados} processos via OAB/${oabUF} ${oabNumero}`,time:'Agora'});
+      } else if(lista.length===0){
+        toast('info','Nenhum processo encontrado',`Nenhum processo localizado para OAB/${oabUF} ${oabNumero}.`,5000);
+      } else {
+        toast('info','Tudo atualizado','Todos os processos já estavam cadastrados.',4000);
+      }
       renderDashNotif();
     }
     return importados;
-  }catch(e){
+  } catch(e){
     console.error('Erro sincronização:',e);
     document.getElementById('sync-status').innerHTML='<div class="sync-dot pending"></div><span>Erro na sincronização</span>';
-    if(exibirFeedback)toast('danger','Erro na sincronização',e.message,6000);
+    if(exibirFeedback) toast('danger','Erro na sincronização',e.message,6000);
     return 0;
   }
 }
 
+async function buscarProcessosPorOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  const btn=document.getElementById('btn-buscar-oab');
+  btn.disabled=true;btn.textContent='Buscando...';
+  document.getElementById('oab-resultado').innerHTML=`<div style="text-align:center;padding:20px;color:var(--txt2);font-size:13px">🔍 Consultando Escavador para OAB/${uf} ${oab}...</div>`;
+  const total = await sincronizarPorOAB(oab, uf, false);
+  btn.disabled=false;btn.textContent='Buscar processos';
+  if(total>0){
+    document.getElementById('oab-resultado').innerHTML=`<div style="color:var(--gtxt);font-size:13px;font-weight:500;padding:12px;background:var(--green);border-radius:var(--r)">✓ ${total} processos importados com sucesso! Acesse a aba <strong>Processos</strong> para visualizar.</div>`;
+  } else {
+    document.getElementById('oab-resultado').innerHTML=`<div style="color:var(--wtxt);font-size:13px;padding:12px;background:var(--warn);border-radius:var(--r)">Nenhum processo novo encontrado para OAB/${uf} ${oab}. Verifique se o número está correto.</div>`;
+  }
+}
+
+// Sincronização automática ao fazer login
 async function sincronizarAoLogin(){
   if(!usuarioLogado)return;
   const oab=usuarioLogado.oab?.replace(/\D/g,'');
   const uf=usuarioLogado.oab?.match(/[A-Z]{2}/)?.[0]||'BA';
-  if(oab)await sincronizarPorOAB(oab,uf,true);
+  if(oab) await sincronizarPorOAB(oab, uf, true);
+}
+async function buscarProcessosPorOAB(){
+  const oab=document.getElementById('oab-input').value.trim();
+  const uf=document.getElementById('oab-uf').value;
+  if(!oab){toast('danger','Erro','Informe o número da OAB');return}
+  const btn=document.getElementById('btn-buscar-oab');
+  btn.disabled=true;
+  btn.textContent='Buscando...';
+  document.getElementById('oab-resultado').innerHTML=`
+    <div style="text-align:center;padding:24px;color:var(--txt2)">
+      <div style="font-size:13px;margin-bottom:8px">🔍 Consultando processos da OAB/${uf} ${oab}...</div>
+      <div style="font-size:12px;color:var(--txt3)">Consultando base do CNJ e tribunais estaduais</div>
+    </div>`;
+
+  // Simula busca (em produção: API do CNJ DataJud)
+  await new Promise(r=>setTimeout(r,2000));
+
+  const encontrados=[
+    {num:`${String(Math.floor(Math.random()*9999999)).padStart(7,'0')}-${String(new Date().getFullYear()).slice(2)}.${new Date().getFullYear()}.8.05.0001`,tribunal:'TJBA — 1ª Vara Cível',tipo:'Cível',fase:'Instrução',mov:'Audiência de instrução designada'},
+    {num:`${String(Math.floor(Math.random()*9999999)).padStart(7,'0')}-${String(new Date().getFullYear()).slice(2)}.${new Date().getFullYear()}.8.05.0002`,tribunal:'TJBA — 2ª Vara de Família',tipo:'Família',fase:'Conhecimento',mov:'Petição inicial recebida'},
+    {num:`${String(Math.floor(Math.random()*9999999)).padStart(7,'0')}-${String(new Date().getFullYear()).slice(2)}.${new Date().getFullYear()}.5.04.0001`,tribunal:'TRT 5ª Região',tipo:'Trabalhista',fase:'Recurso',mov:'Recurso ordinário interposto'},
+  ];
+
+  btn.disabled=false;
+  btn.textContent='Buscar processos';
+
+  document.getElementById('oab-resultado').innerHTML=`
+    <div style="margin-bottom:12px;font-size:13px;color:var(--gtxt);font-weight:500">✓ ${encontrados.length} processos encontrados para OAB/${uf} ${oab}</div>
+    ${encontrados.map((p,i)=>`
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;color:var(--btxt);font-family:monospace;margin-bottom:3px">${p.num}</div>
+          <div style="font-size:12px;color:var(--txt2)">${p.tribunal} · <span class="badge badge-blue">${p.tipo}</span> · <span class="badge ${p.fase==='Recurso'?'badge-red':p.fase==='Instrução'?'badge-blue':'badge-gray'}">${p.fase}</span></div>
+          <div style="font-size:11px;color:var(--txt3);margin-top:3px">${p.mov}</div>
+        </div>
+        <button class="btn btn-green btn-sm" onclick="importarProcesso(${i})">+ Importar</button>
+      </div>`).join('')}`;
+
+  window._oabProcessos=encontrados;
 }
 
-function abrirPJeOAB(){const oab=document.getElementById('oab-input').value.trim();const uf=document.getElementById('oab-uf').value;if(!oab){toast('danger','Erro','Informe o número da OAB');return}window.open(`https://pje.tjba.jus.br/pje/ConsultaPublica/listView.seam?oab=${oab}&uf=${uf}`,'_blank')}
-function abrirCNJOAB(){const oab=document.getElementById('oab-input').value.trim();const uf=document.getElementById('oab-uf').value;if(!oab){toast('danger','Erro','Informe o número da OAB');return}window.open(`https://cnj.jus.br/pesquisapublica/#/advogado?oab=${oab}&uf=${uf}`,'_blank')}
-function abrirEscavadorOAB(){const oab=document.getElementById('oab-input').value.trim();const uf=document.getElementById('oab-uf').value;if(!oab){toast('danger','Erro','Informe o número da OAB');return}window.open(`https://www.escavador.com/sobre/oab/${uf}/${oab}`,'_blank')}
-function abrirPJeProcesso(){const num=document.getElementById('proc-input').value.trim();if(!num){toast('danger','Erro','Informe o número do processo');return}window.open(`https://pje.tjba.jus.br/pje/ConsultaPublica/listView.seam?numeroProcesso=${num}`,'_blank')}
-function abrirCNJProcesso(){const num=document.getElementById('proc-input').value.trim();if(!num){toast('danger','Erro','Informe o número do processo');return}window.open(`https://cnj.jus.br/pesquisapublica/#/datainicial?datainicial=${num}`,'_blank')}
-function abrirJusbrasilProcesso(){const num=document.getElementById('proc-input').value.trim();if(!num){toast('danger','Erro','Informe o número do processo');return}window.open(`https://www.jusbrasil.com.br/processos/busca?q=${encodeURIComponent(num)}`,'_blank')}
+function importarProcesso(i){
+  const p=window._oabProcessos[i];
+  if(!p)return;
+  if(processos.find(x=>x.num===p.num)){toast('warn','Atenção','Este processo já está cadastrado.');return}
+  processos.push({id:Date.now(),num:p.num,cliente:'— Vincular cliente —',tipo:p.tipo,tribunal:p.tribunal,fase:p.fase,mov:p.mov,sync:new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})});
+  renderProcessos();
+  toast('success','Processo importado!',`${p.num.slice(0,18)}... adicionado com sucesso.`);
+  // Marcar como importado
+  const btn=document.querySelectorAll('#oab-resultado button')[i];
+  if(btn){btn.textContent='✓ Importado';btn.disabled=true;btn.className='btn btn-sm badge-gray';}
+}
 
 function abrirModal(id){const el=document.getElementById(id);if(el)el.classList.add('open')}
 function fecharModal(id){const el=document.getElementById(id);if(el)el.classList.remove('open')}
@@ -1546,7 +1705,6 @@ function nav(page,el){
 }
 
 function iniciarApp(){
-  carregarDados();
   renderClientes();renderPrazos();renderProcessos();renderAgenda();renderDashPrazos();renderDashNotif();renderFinanceiro();atualizarSelects();atualizarSelectsPagamento();
   setTimeout(verificarAlertas,3000);
   setTimeout(verificarInadimplencia,4000);
@@ -1554,6 +1712,7 @@ function iniciarApp(){
   setInterval(verificarInadimplencia,60*60*1000);
 }
 
+// Arranque — só verifica auto-login, NÃO renderiza nada ainda
 verificarAutoLogin();
 </script>
 </body>
